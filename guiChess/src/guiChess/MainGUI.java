@@ -2,23 +2,17 @@ package guiChess;
 import javax.swing.*;
 
 public class MainGUI{
-    public JFrame frame;
-    public StartPage sp;
+    private StartWindow main;
     public MainGUI() {
         try { // attempt to set the theme to match the systems.
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        frame = new JFrame("Chess Game");
-        sp = new StartPage();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(sp);
-        frame.pack();
-        frame.setVisible(true);
+        main = new StartWindow();
         return;
     }
     public void StartPage() {
-        sp.setVisible(true);
+        main.setVisible(true);
     }
 }
