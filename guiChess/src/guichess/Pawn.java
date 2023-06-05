@@ -10,7 +10,7 @@ public class Pawn extends Piece {
     public List<Move> getLegalMoves() {
         List<Move> legalMoves = new ArrayList<>();
         Position pos = board.findPiece(this);
-        if (pos.getRow() == owner.getStartRow) {
+        if (pos.getRow() == owner.getStartRow()) {
             Position target = new Position(pos.getRow() + (2 * owner.getDirection()), pos.getCol());
             if(board.isPathFree(pos, new Position(pos.getRow(), pos.getCol()+2))) {
                 if(board.getPieceAt(target) == null) {

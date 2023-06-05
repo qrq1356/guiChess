@@ -9,10 +9,10 @@ import java.sql.SQLException;
 import javax.swing.DefaultListModel;
 
 /**
- * This class manages DB management for Users.
- * it does NOT manage users themselves. this data should not be continously
- * read/written to. user state should always be internal. failure state 
- * handling is a requirement.
+ * This class manages the database.
+ * it does NOT manage loaded state, using data right from the database for use
+ * in the program is difficult because of storage type resrictions, so it will
+ * be avoided, translation is prefered.
  * @author qrq1356
  */
 public class DatabaseManager {
@@ -42,7 +42,7 @@ public class DatabaseManager {
     }
     
     /**
-     * ensures table users table exists by creating on if it doesn't already
+     * ensures table users table exists by creating one if it doesn't already
      */
     public void createUsersTable() {
         try {
@@ -111,7 +111,8 @@ public class DatabaseManager {
      */
     public int addUser(String username) {
         try {
-            PreparedStatement exists = connection.prepareStatement("SELECT COUNT(*) FROM "+USERS_TABLE+" WHERE (username = ?)"
+            PreparedStatement exists = connection.prepareStatement(
+                "SELECT COUNT(*) FROM "+USERS_TABLE+" WHERE (username = ?)"
             );
             exists.setString(1, username);
             ResultSet resultSet = exists.executeQuery();
@@ -120,7 +121,8 @@ public class DatabaseManager {
             if (count > 0) {
                 return -1;
             } else {
-                PreparedStatement insert = connection.prepareStatement("INSERT INTO "+USERS_TABLE+" (username) VALUES (?)"
+                PreparedStatement insert = connection.prepareStatement(
+                    "INSERT INTO "+USERS_TABLE+" (username) VALUES (?)"
                 );
                 insert.setString(1, username);
                 insert.executeUpdate();
@@ -138,7 +140,8 @@ public class DatabaseManager {
      */
     public int incrementWins(String username) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE "+USERS_TABLE+" SET wins = wins + 1 WHERE username = ?"
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                "UPDATE "+USERS_TABLE+" SET wins = wins + 1 WHERE username = ?"
             );
             preparedStatement.setString(1, username);
             int rowsAffected = preparedStatement.executeUpdate();
@@ -159,7 +162,8 @@ public class DatabaseManager {
      */
     public int incrementLosses(String username) {
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement("UPDATE "+USERS_TABLE+" SET losses = losses + 1 WHERE username = ?"
+            PreparedStatement preparedStatement = connection.prepareStatement(
+                "UPDATE "+USERS_TABLE+" SET losses = losses + 1 WHERE username = ?"
             );
             preparedStatement.setString(1, username);
             int rowsAffected = preparedStatement.executeUpdate();
@@ -182,7 +186,8 @@ public class DatabaseManager {
     public DefaultListModel<String> getUsersNamesList() {
         DefaultListModel<String> userList = new DefaultListModel<>();
         try {
-            try (PreparedStatement statement = connection.prepareStatement("SELECT username FROM "+USERS_TABLE
+            try (PreparedStatement statement = connection.prepareStatement(
+                "SELECT username FROM "+USERS_TABLE
             ); ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     String name = resultSet.getString("username");

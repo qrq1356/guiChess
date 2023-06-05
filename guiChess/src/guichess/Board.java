@@ -5,7 +5,9 @@ public class Board {
     public static final int NUM_ROWS = 8, NUM_COLS = 8;
     private final Piece[][] board;
     private Player up, down;
-    public Board() {
+    public Board(Player up, Player down) {
+        this.up = up;
+        this.down = down;
         this.board = new Piece[NUM_ROWS][NUM_COLS];
     }
     // should be revised to add by player type to avoid reptition.
@@ -71,6 +73,9 @@ public class Board {
             row += rowDir;
             col += colDir;
         }
+        return true;
+    }
+    public boolean willBeInCheck(Player player, Move move) {
         return true;
     }
 }

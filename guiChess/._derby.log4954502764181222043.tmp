@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Thu Jun 01 15:55:59 NZST 2023:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0188-7519-1961-00003b1a8ef8 
+on database directory C:\Users\purin\Documents\NetBeansProjects\guiChess\guiChess\userDB with class loader sun.misc.Launcher$AppClassLoader@5c647e05 
+Loaded from file:/C:/Users/purin/Documents/NetBeansProjects/guiChess/guiChess/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_371-b11
+user.dir=C:\Users\purin\Documents\NetBeansProjects\guiChess\guiChess
+os.name=Windows 11
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
