@@ -1,12 +1,17 @@
 package guiChess;
 
 public class SetupWindow extends javax.swing.JFrame {
-    boolean UserSelected = false;
+    boolean userSelected = false;
     /**
      * Creates new form SetupWindow
      */
     public SetupWindow() {
         initComponents();
+        // default false as no user is selected initally.
+        LoginPanel.setVisible(false);
+        // no default errors
+        LoginErrorLabel.setVisible(false);
+        CreateErrorLabel.setVisible(false);
     }
 
     /**
@@ -44,6 +49,7 @@ public class SetupWindow extends javax.swing.JFrame {
         CreatePasswordLabel = new javax.swing.JLabel();
         CreatePassword = new javax.swing.JPasswordField();
         CreateButton = new javax.swing.JButton();
+        CreateErrorLabel = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -62,7 +68,6 @@ public class SetupWindow extends javax.swing.JFrame {
         setLocationByPlatform(true);
         setMinimumSize(new java.awt.Dimension(450, 470));
         setName("SetupFrame"); // NOI18N
-        setUndecorated(true);
         setPreferredSize(new java.awt.Dimension(450, 470));
 
         HeaderText.setFont(new java.awt.Font("sansserif", 1, 36)); // NOI18N
@@ -97,10 +102,14 @@ public class SetupWindow extends javax.swing.JFrame {
         UserSelectList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         UserSelectList.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         UserSelectList.setSelectionBackground(new java.awt.Color(80, 24, 70));
+        UserSelectList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                UserSelectListValueChanged(evt);
+            }
+        });
         jScrollPane1.setViewportView(UserSelectList);
 
         LoginPanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        LoginPanel.setEnabled(userSelected);
 
         LoginUsernameLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         LoginUsernameLabel.setText("Username: ");
@@ -244,6 +253,10 @@ public class SetupWindow extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        CreateErrorLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        CreateErrorLabel.setForeground(new java.awt.Color(200, 0, 60));
+        CreateErrorLabel.setText("error label");
+
         javax.swing.GroupLayout CreateUserPanelLayout = new javax.swing.GroupLayout(CreateUserPanel);
         CreateUserPanel.setLayout(CreateUserPanelLayout);
         CreateUserPanelLayout.setHorizontalGroup(
@@ -256,12 +269,18 @@ public class SetupWindow extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(UserCreateHeader)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(CreateUserPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(CreateErrorLabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         CreateUserPanelLayout.setVerticalGroup(
             CreateUserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(CreateUserPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(UserCreateHeader)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(CreateErrorLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(CreatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -310,7 +329,7 @@ public class SetupWindow extends javax.swing.JFrame {
                 .addComponent(HeaderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(UserSelectPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         getAccessibleContext().setAccessibleDescription("");
@@ -329,6 +348,10 @@ public class SetupWindow extends javax.swing.JFrame {
     private void LoginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_LoginButtonActionPerformed
         
     }//GEN-LAST:event_LoginButtonActionPerformed
+
+    private void UserSelectListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_UserSelectListValueChanged
+        LoginPanel.setVisible(UserSelectList.getSelectedValue() != null);
+    }//GEN-LAST:event_UserSelectListValueChanged
 
     /**
      * @param args the command line arguments
@@ -367,6 +390,7 @@ public class SetupWindow extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton CreateButton;
+    private javax.swing.JLabel CreateErrorLabel;
     private javax.swing.JTextField CreateName;
     private javax.swing.JLabel CreateNameLabel;
     private javax.swing.JPanel CreatePanel;
