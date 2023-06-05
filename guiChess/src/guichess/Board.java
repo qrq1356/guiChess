@@ -10,29 +10,20 @@ public class Board {
         this.down = down;
         this.board = new Piece[NUM_ROWS][NUM_COLS];
     }
-    // should be revised to add by player type to avoid reptition.
-    public void addStartingPieces() {
-        // add pawns
+    public void addStartingPieces(Player owner) {
+        int p = owner.getPawnRow();
         for (int c = 0; c < NUM_COLS; c++) {
-            board[c][1] = new Pawn(up, this);
-            board[c][6] = new Pawn(down, this);
+            board[c][p] = new Pawn(owner, this);
         }
-        board[0][0] = new Rook(up, this);
-        board[0][1] = new Knight(up, this);
-        board[0][2] = new Bishop(up, this);
-        board[0][3] = new Queen(up, this);
-        board[0][4] = new King(up, this);
-        board[0][5] = new Bishop(up, this);
-        board[0][6] = new Knight(up, this);
-        board[0][7] = new Rook(up, this);
-        board[6][0] = new Rook(down, this);
-        board[6][1] = new Knight(down, this);
-        board[6][2] = new Bishop(down, this);
-        board[6][3] = new Queen(down, this);
-        board[6][4] = new King(down, this);
-        board[6][5] = new Bishop(down, this);
-        board[6][6] = new Knight(down, this);
-        board[6][7] = new Rook(down, this);
+        int b = owner.getBackRow();
+        board[b][0] = new Rook(owner, this);
+        board[b][1] = new Knight(owner, this);
+        board[b][2] = new Bishop(owner, this);
+        board[b][3] = new Queen(owner, this);
+        board[b][4] = new King(owner, this);
+        board[b][5] = new Bishop(owner, this);
+        board[b][6] = new Knight(owner, this);
+        board[b][7] = new Rook(owner, this);
     }
     public void removePieceAt(Position pos) {
         board[pos.getRow()][pos.getCol()] = null;
