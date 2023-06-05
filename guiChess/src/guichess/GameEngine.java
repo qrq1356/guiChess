@@ -4,7 +4,7 @@ public class GameEngine {
     private Board board;
     private Player up, down;
     public GameEngine(Player up, Player down) {
-        Player up = new Player(direction)
+        Player up = new Player(direction, name, )
         board = new Board(up, down);
         board.addStartingPieces();
     }
