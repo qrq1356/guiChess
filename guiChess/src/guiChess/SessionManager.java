@@ -1,5 +1,5 @@
 package guiChess;
-import guiChess.UI.SetupWindow;
+import guiChess.UI.MainFrame;
 
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -12,14 +12,26 @@ import javax.swing.DefaultListModel;
  */
 public class SessionManager {
     private static final Logger log = Logger.getLogger(SessionManager.class.getName());
-    private static DatabaseManager dbm = new DatabaseManager();
-    private static SetupWindow setupWindow;
-    public void main(String[] args) {
-        this.setupWindow = new SetupWindow(this);
-        setupWindow.setVisible(true);
+    private DatabaseManager dbm = new DatabaseManager();
+    private GameEngine gameEngine = new GameEngine();
+    private MainFrame mainFrame = new MainFrame(this);
+    private SessionManager() {
+        // init database
+        dbm.connect();
+        dbm.createTables();
+        log.info("Database connected, tables initalized");
+        // start the UI
+        mainFrame.setVisible(true);
+        log.info("UI shown to user");
     }
-    
-    public DefaultListModel<String> getUsersNames() {
-        
+    public DefaultListModel<String> getUserNames() {
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        for (String name : dbm.getUserNames()) {
+            listModel.addElement(name);
+        }
+        return listModel;
+    }
+    public GameEngine getGameEngine() {
+        return gameEngine;
     }
 }

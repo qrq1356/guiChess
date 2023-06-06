@@ -39,6 +39,14 @@ public class DatabaseManager {
     }
 
     /**
+     * creates all tables if they don't exist already.
+     */
+    public void createTables() {
+        createUsersTable();
+        createGamesTable();
+        createMovesTable();
+    }
+    /**
      * creates the users table. if the table already exists inform log and
      * return.
      */
@@ -299,4 +307,19 @@ public class DatabaseManager {
         }
     }
 
+    public List<String> getUserNames() {
+        List<String> usernames = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT username FROM " + USERS_TABLE
+            );
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                usernames.add(resultSet.getString("username"));
+            }
+        } catch (SQLException ex) {
+            log.severe("GETUSERNAMES: Error getting user names:" + ex.getMessage());
+        }
+        return usernames;
+    }
 }
