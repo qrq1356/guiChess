@@ -1,5 +1,7 @@
 package guiChess;
 // logging
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
 // database interface
 import java.sql.Connection;
@@ -241,4 +243,60 @@ public class DatabaseManager {
         }
         return false;
     }
+
+    public List<Move> loadMovesForGame(int gameID) {
+        // Retrieve the moves associated with the given game entry from the database
+        List<Move> moves = new ArrayList<>();
+
+        // Perform the necessary database query and populate the 'moves' list
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT * FROM " + MOVES_TABLE + " WHERE GameID = ?"
+            );
+            statement.setInt(1, gameID);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                Position from = new Position(resultSet.getString("FromSquare"));
+                Position to = new Position(resultSet.getString("ToSquare"));
+                Move move = new Move(from, to);
+                moves.add(move);
+            }
+        } catch (SQLException ex) {
+            log.severe("LOADMOVESFORGAME: Error loading moves for game: " + gameID
+                    + ". Error message: " + ex.getMessage());
+        }
+        return moves;
+    }
+    public void saveMovesForGame(int gameID, List<Move> moves) {
+        // Delete existing moves for the given gameID
+        deleteMovesForGame(gameID);
+        // Save the moves to the database, associating them with the given game entry
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "INSERT INTO " + MOVES_TABLE + " (GameID, FromSquare, ToSquare) VALUES (?, ?, ?)"
+            );
+            for (Move move : moves) {
+                statement.setInt(1, gameID);
+                statement.setString(2, move.getFrom().toString());
+                statement.setString(3, move.getTo().toString());
+                statement.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            log.severe("SAVEMOVESFORGAME: Error saving moves for game: " + gameID
+                    + ". Error message: " + ex.getMessage());
+        }
+    }
+    private void deleteMovesForGame(int gameID) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "DELETE FROM " + MOVES_TABLE + " WHERE GameID = ?"
+            );
+            statement.setInt(1, gameID);
+            statement.executeUpdate();
+        } catch (SQLException ex) {
+            log.severe("DELETEMOVESFORGAME: Error deleting moves for game: " + gameID
+                    + ". Error message: " + ex.getMessage());
+        }
+    }
+
 }

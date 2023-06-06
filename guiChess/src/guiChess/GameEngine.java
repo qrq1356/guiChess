@@ -14,7 +14,7 @@ public class GameEngine {
         this.up = up;
         this.down = down;
         current = up;
-        board = new Board(up, down);
+        board = new Board();
         board.addStartingPieces(up);
         board.addStartingPieces(down);
         moves = new ArrayList<>();
@@ -44,5 +44,10 @@ public class GameEngine {
         moves.add(move);
         // switch the current player
         current = (current == up) ? down : up;
+    }
+    public void playGameFromList(List<Move> moves) {
+        for (Move move : moves) {
+            makeMove(move);
+        }
     }
 }

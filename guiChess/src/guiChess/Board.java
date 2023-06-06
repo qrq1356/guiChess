@@ -7,10 +7,7 @@ import java.util.List;
 public class Board {
     public static final int NUM_ROWS = 8, NUM_COLS = 8;
     private final Piece[][] board;
-    private Player up, down;
-    public Board(Player up, Player down) {
-        this.up = up;
-        this.down = down;
+    public Board() {
         this.board = new Piece[NUM_ROWS][NUM_COLS];
     }
     public void addStartingPieces(Player owner) {
@@ -69,7 +66,6 @@ public class Board {
         }
         return true;
     }
-    // for peices with the owner of a given player, obtain their list of valid moves to return all valid moves of a given player
     public List<Move> getValidMoves(Player player) {
         List<Move> validMoves = new ArrayList<>();
         for (int r = 0; r < NUM_ROWS; r++) {
@@ -83,6 +79,33 @@ public class Board {
         return validMoves;
     }
     public boolean willBeInCheck(Player player, Move move) {
-        return true;
+        // make the move
+        Piece piece = board[move.getFrom().getRow()][move.getFrom().getCol()];
+        board[move.getFrom().getRow()][move.getFrom().getCol()] = null;
+        board[move.getTo().getRow()][move.getTo().getCol()] = piece;
+        // check if the king is in check
+        Position kingPos = findPiece(new King(player, this));
+        boolean inCheck = isInCheck(player, kingPos);
+        // undo the move
+        board[move.getFrom().getRow()][move.getFrom().getCol()] = piece;
+        board[move.getTo().getRow()][move.getTo().getCol()] = null;
+        return inCheck;
+    }
+    public boolean isInCheck(Player player, Position kingPos) {
+        // check if any of the opponent's pieces can attack the king
+        for (int r = 0; r < NUM_ROWS; r++) {
+            for (int c = 0; c < NUM_COLS; c++) {
+                Piece piece = board[r][c];
+                if (piece != null && piece.getOwner() != player) {
+                    List<Move> moves = piece.getLegalMoves();
+                    for (Move move : moves) {
+                        if (move.getTo().equals(kingPos)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

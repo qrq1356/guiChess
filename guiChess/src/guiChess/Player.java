@@ -2,7 +2,6 @@ package guiChess;
 
 public abstract class Player {
     protected boolean isUp;
-    
     public int getPawnRow() {
         return isUp ? 1 : 6;
     }

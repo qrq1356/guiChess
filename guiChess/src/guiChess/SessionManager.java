@@ -13,8 +13,9 @@ public class SessionManager {
     private static final Logger log
             = Logger.getLogger(SessionManager.class.getName());
     private static DatabaseManager dbm = new DatabaseManager();
-    private SetupWindow setupWindow = new SetupWindow(this);
-    public static void main(String[] args) {
+    private static SetupWindow setupWindow;
+    public void main(String[] args) {
+        this.setupWindow = new SetupWindow(this);
         // setupWindow handles the front to loading the user.
         setupWindow.setVisible(true);
 
