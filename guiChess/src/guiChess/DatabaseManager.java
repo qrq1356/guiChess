@@ -2,6 +2,8 @@ package guiChess;
 // logging
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 // database interface
 import java.sql.Connection;
@@ -36,6 +38,12 @@ public class DatabaseManager {
             log.severe("DB CONNECT: Error connecting to the database."
                     + "Error message: " + ex.getMessage());
         }
+        log.setLevel(Level.ALL);
+        ConsoleHandler consoleHandler = new ConsoleHandler();
+        consoleHandler.setLevel(Level.ALL);
+
+        // Add the console handler to the logger
+        log.addHandler(consoleHandler);
     }
 
     /**
@@ -133,16 +141,11 @@ public class DatabaseManager {
             log.finest("CREATE USER: invalid name condition.");
             return 2;
         }
+        if (checkUserExists(username)) {
+            log.finest("CREATE USER: name taken condition.");
+            return 2;
+        }
         try {
-            PreparedStatement exists = connection.prepareStatement(
-                    "SELECT COUNT(*) FROM " + USERS_TABLE + " WHERE (username = ?)"
-            );
-            exists.setString(1, username);
-            ResultSet resultSet = exists.executeQuery();
-            if (resultSet.next()) {
-                log.finest("CREATE USER: name taken condition.");
-                return 2;
-            }
             PreparedStatement insert = connection.prepareStatement(
                     "INSERT INTO " + USERS_TABLE + " (username) VALUES (?)"
             );
