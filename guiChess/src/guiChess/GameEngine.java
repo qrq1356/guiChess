@@ -42,7 +42,7 @@ public class GameEngine {
         List<Move> validMoves = board.getValidMoves(player);
         for (Move m : validMoves) {
             // if move is in validMoves, make the move
-            if (m.equals(move)) {
+            if (m.equals(move) && !board.willBeInCheck(player, move)) {
                 makeMove(move);
             }
         }

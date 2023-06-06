@@ -14,13 +14,14 @@ public class SessionManager {
     private static final Logger log = Logger.getLogger(SessionManager.class.getName());
     private DatabaseManager dbm = new DatabaseManager();
     private GameEngine gameEngine = new GameEngine();
-    private MainFrame mainFrame = new MainFrame(this);
-    private SessionManager() {
+    private MainFrame mainFrame;
+    public SessionManager() {
         // init database
         dbm.connect();
         dbm.createTables();
         log.info("Database connected, tables initalized");
         // start the UI
+        this.mainFrame = new MainFrame(this);
         mainFrame.setVisible(true);
         log.info("UI shown to user");
     }
@@ -30,6 +31,10 @@ public class SessionManager {
             listModel.addElement(name);
         }
         return listModel;
+    }
+    // create and load a user with the given name
+    public void createUser(String name) {
+        dbm.addUser(name);
     }
     public GameEngine getGameEngine() {
         return gameEngine;
