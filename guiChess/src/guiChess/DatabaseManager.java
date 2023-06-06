@@ -1,8 +1,6 @@
 package guiChess;
 // logging
-
 import java.util.logging.Logger;
-import java.util.logging.Level;
 // database interface
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -22,9 +20,7 @@ public class DatabaseManager {
     private static final Logger log
             = Logger.getLogger(DatabaseManager.class.getName());
     private static final String DB_URL = "jdbc:derby:Chess_v1;create=true";
-    private static final String USERS_TABLE = "USERS",
-            GAMES_TABLE = "GAMES",
-            MOVES_TABLE = "MOVES";
+    private static final String USERS_TABLE = "USERS", GAMES_TABLE = "GAMES", MOVES_TABLE = "MOVES";
     private Connection connection;
 
     /**

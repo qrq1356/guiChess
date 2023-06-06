@@ -1,6 +1,9 @@
 package guiChess;
 import guiChess.Pieces.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Board {
     public static final int NUM_ROWS = 8, NUM_COLS = 8;
     private final Piece[][] board;
@@ -65,6 +68,19 @@ public class Board {
             col += colDir;
         }
         return true;
+    }
+    // for peices with the owner of a given player, obtain their list of valid moves to return all valid moves of a given player
+    public List<Move> getValidMoves(Player player) {
+        List<Move> validMoves = new ArrayList<>();
+        for (int r = 0; r < NUM_ROWS; r++) {
+            for (int c = 0; c < NUM_COLS; c++) {
+                Piece piece = board[r][c];
+                if (piece != null && piece.getOwner() == player) {
+                    validMoves.addAll(piece.getLegalMoves());
+                }
+            }
+        }
+        return validMoves;
     }
     public boolean willBeInCheck(Player player, Move move) {
         return true;

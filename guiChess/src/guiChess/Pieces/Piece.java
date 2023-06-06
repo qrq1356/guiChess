@@ -2,8 +2,6 @@ package guiChess.Pieces;
 import guiChess.Player;
 import guiChess.Board;
 import guiChess.Move;
-import guiChess.Position;
-
 
 import java.util.List;
 
@@ -14,6 +12,6 @@ public abstract class Piece {
         this.owner = owner;
         this.board = board;
     }
-    public Player getOwner() { return owner; };
+    public Player getOwner() { return owner; }
     public abstract List<Move> getLegalMoves();
 }

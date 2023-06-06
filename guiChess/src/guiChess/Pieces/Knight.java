@@ -21,7 +21,7 @@ public class Knight extends Piece {
         for (int[] move : moves) {
             int newRow = pos.getRow() + move[0];
             int newCol = pos.getCol() + move[1];
-            if (newRow >= 0 && newRow < board.NUM_ROWS && newCol >= 0 && newCol < board.NUM_COLS) {
+            if (newRow >= 0 && newRow < Board.NUM_ROWS && newCol >= 0 && newCol < Board.NUM_COLS) {
                 if(board.getPieceAt(newRow, newCol).getOwner() != owner) {
                     legalMoves.add(new Move(pos, new Position(newRow, newCol)));
                 }
