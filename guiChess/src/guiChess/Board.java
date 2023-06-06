@@ -1,5 +1,5 @@
-package guichess;
-
+package guiChess;
+import guiChess.Pieces.*;
 
 public class Board {
     public static final int NUM_ROWS = 8, NUM_COLS = 8;

@@ -1,5 +1,4 @@
-package guichess;
-
+package guiChess;
 
 public abstract class Player {
     protected boolean isUp;

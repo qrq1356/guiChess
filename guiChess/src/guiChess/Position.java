@@ -1,4 +1,4 @@
-package guichess;
+package guiChess;
 
 public class Position {
     private int row, col;

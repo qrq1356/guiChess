@@ -1,4 +1,9 @@
-package guichess;
+package guiChess.Pieces;
+import guiChess.Player;
+import guiChess.Board;
+import guiChess.Move;
+import guiChess.Position;
+
 
 import java.util.ArrayList;
 import java.util.List;

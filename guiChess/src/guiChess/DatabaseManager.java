@@ -1,4 +1,4 @@
-package guichess;
+package guiChess;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

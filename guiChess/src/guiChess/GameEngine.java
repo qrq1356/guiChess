@@ -1,4 +1,4 @@
-package guichess;
+package guiChess;
 
 public class GameEngine {
     private Board board;
