@@ -39,6 +39,8 @@ public class SetupWindow extends javax.swing.JFrame {
         LoginPasswordLabel = new javax.swing.JLabel();
         LoginButton = new javax.swing.JButton();
         LoginErrorLabel = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        GamesList = new javax.swing.JList<>();
         CreateUserPanel = new javax.swing.JPanel();
         UserCreateHeader = new javax.swing.JLabel();
         CreatePanel = new javax.swing.JPanel();
@@ -62,6 +64,7 @@ public class SetupWindow extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Chess");
+        setBackground(new java.awt.Color(255, 255, 255));
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setLocationByPlatform(true);
         setMinimumSize(new java.awt.Dimension(450, 470));
@@ -92,11 +95,7 @@ public class SetupWindow extends javax.swing.JFrame {
 
         UserSelectList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Users", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
         UserSelectList.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        UserSelectList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        UserSelectList.setModel(sm.getUserNames());
         UserSelectList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         UserSelectList.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         UserSelectList.setSelectionBackground(new java.awt.Color(80, 24, 70));
@@ -109,7 +108,7 @@ public class SetupWindow extends javax.swing.JFrame {
 
         LoginPanel.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
-        LoginUsernameLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        LoginUsernameLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         LoginUsernameLabel.setText("Username: ");
 
         LoginWinLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
@@ -118,7 +117,7 @@ public class SetupWindow extends javax.swing.JFrame {
         LoginLossesLabel.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         LoginLossesLabel.setText("losses:");
 
-        LoginUsername.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        LoginUsername.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         LoginUsername.setText("username_place");
 
         LoginWins.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -147,35 +146,41 @@ public class SetupWindow extends javax.swing.JFrame {
         LoginErrorLabel.setForeground(new java.awt.Color(200, 0, 60));
         LoginErrorLabel.setText("error label");
 
+        GamesList.setBorder(javax.swing.BorderFactory.createTitledBorder("Games"));
+        GamesList.setModel(sm.getGames(userSelectList.getSelectedValue()));
+        jScrollPane2.setViewportView(GamesList);
+
         javax.swing.GroupLayout LoginPanelLayout = new javax.swing.GroupLayout(LoginPanel);
         LoginPanel.setLayout(LoginPanelLayout);
         LoginPanelLayout.setHorizontalGroup(
             LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(LoginPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, LoginPanelLayout.createSequentialGroup()
+                .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(LoginPanelLayout.createSequentialGroup()
-                        .addComponent(LoginWinLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(LoginWins))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(LoginButton))
                     .addGroup(LoginPanelLayout.createSequentialGroup()
-                        .addComponent(LoginUsernameLabel)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(LoginUsername))
-                    .addGroup(LoginPanelLayout.createSequentialGroup()
-                        .addComponent(LoginLossesLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(LoginLosses)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(LoginPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(LoginPasswordLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(LoginButton)
-                    .addComponent(LoginErrorLabel)
-                    .addComponent(LoginPasswordEntry, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(LoginPanelLayout.createSequentialGroup()
+                                .addComponent(LoginUsernameLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(LoginUsername))
+                            .addGroup(LoginPanelLayout.createSequentialGroup()
+                                .addComponent(LoginPasswordLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(LoginPasswordEntry, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(LoginErrorLabel)
+                            .addGroup(LoginPanelLayout.createSequentialGroup()
+                                .addComponent(LoginWinLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(LoginWins))
+                            .addGroup(LoginPanelLayout.createSequentialGroup()
+                                .addComponent(LoginLossesLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(LoginLosses)))))
+                .addContainerGap())
         );
         LoginPanelLayout.setVerticalGroup(
             LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -184,7 +189,7 @@ public class SetupWindow extends javax.swing.JFrame {
                 .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LoginUsernameLabel)
                     .addComponent(LoginUsername))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LoginWinLabel)
                     .addComponent(LoginWins))
@@ -194,13 +199,14 @@ public class SetupWindow extends javax.swing.JFrame {
                     .addComponent(LoginLosses))
                 .addGap(18, 18, 18)
                 .addComponent(LoginErrorLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(LoginPasswordEntry)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(LoginPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(LoginPasswordEntry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(LoginPasswordLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(LoginButton)
-                .addGap(15, 15, 15))
+                .addGap(16, 16, 16))
+            .addComponent(jScrollPane2)
         );
 
         UserCreateHeader.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
@@ -260,14 +266,14 @@ public class SetupWindow extends javax.swing.JFrame {
         CreateUserPanelLayout.setHorizontalGroup(
             CreateUserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(CreateUserPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(CreateUserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(CreatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(CreateUserPanelLayout.createSequentialGroup()
                         .addComponent(UserCreateHeader)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(CreateErrorLabel)))
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         CreateUserPanelLayout.setVerticalGroup(
             CreateUserPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -285,17 +291,19 @@ public class SetupWindow extends javax.swing.JFrame {
         UserSelectPanel.setLayout(UserSelectPanelLayout);
         UserSelectPanelLayout.setHorizontalGroup(
             UserSelectPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(CreateUserPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(UserSelectPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(LoginPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, UserSelectPanelLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(UserSelectHeader)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(CreateUserPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(UserSelectPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(UserSelectPanelLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(LoginPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, UserSelectPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(UserSelectHeader)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         UserSelectPanelLayout.setVerticalGroup(
             UserSelectPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -304,7 +312,7 @@ public class SetupWindow extends javax.swing.JFrame {
                 .addComponent(UserSelectHeader)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(UserSelectPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE)
                     .addComponent(LoginPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(CreateUserPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -324,7 +332,7 @@ public class SetupWindow extends javax.swing.JFrame {
                 .addComponent(HeaderPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(UserSelectPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
 
         getAccessibleContext().setAccessibleDescription("");
@@ -360,6 +368,7 @@ public class SetupWindow extends javax.swing.JFrame {
     private javax.swing.JPasswordField CreatePassword;
     private javax.swing.JLabel CreatePasswordLabel;
     private javax.swing.JPanel CreateUserPanel;
+    private javax.swing.JList<String> GamesList;
     private javax.swing.JPanel HeaderPanel;
     private javax.swing.JLabel HeaderText;
     private javax.swing.JButton LoginButton;
@@ -379,5 +388,6 @@ public class SetupWindow extends javax.swing.JFrame {
     private javax.swing.JPanel UserSelectPanel;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
 }
