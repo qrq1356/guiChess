@@ -1,7 +1,10 @@
 package guiChess;
-// logging
+
+// format transformation.
+
 import java.util.ArrayList;
 import java.util.List;
+// logging
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,16 +17,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * This class manages interacting with the database, it is not for interacting
- * with the game data as its used.
+ * This class manages interacting with the database,
+ * it is not for interacting with the game data as its used.
+ * see SessionManager for that.
  *
  * @author qrq1356
  */
 public class DatabaseManager {
-
-    private static final Logger log
-            = Logger.getLogger(DatabaseManager.class.getName());
-    private static final String DB_URL = "jdbc:derby:Chess_v1;create=true";
+    private static final Logger log = Logger.getLogger(DatabaseManager.class.getName());
+    // READ ME. before you change the DB URL, have you ensured local permissions and state?
+    // remember. netbeans will happily mangle permissions without warning...
+    private static final String DB_URL = "jdbc:derby:Chess_v2;create=true";
     private static final String USERS_TABLE = "USERS", GAMES_TABLE = "GAMES", MOVES_TABLE = "MOVES";
     private Connection connection;
 
@@ -41,7 +45,6 @@ public class DatabaseManager {
         log.setLevel(Level.ALL);
         ConsoleHandler consoleHandler = new ConsoleHandler();
         consoleHandler.setLevel(Level.ALL);
-
         // Add the console handler to the logger
         log.addHandler(consoleHandler);
     }
@@ -54,9 +57,10 @@ public class DatabaseManager {
         createGamesTable();
         createMovesTable();
     }
+
     /**
-     * creates the users table. if the table already exists inform log and
-     * return.
+     * creates the users table. if the table already exists inform fine and return.
+     * Table format: ID | Username | Wins | Losses
      */
     public void createUsersTable() {
         try {
@@ -80,8 +84,11 @@ public class DatabaseManager {
     }
 
     /**
-     * creates the games table. if the table already exists inform log and
-     * return.
+     * creates the games table. if the table already exists inform fine and return.
+     * Table format: ID | Player1 | Player2 | Status | Result
+     * Null Players are automatically assigned to a Bot.
+     * Status is true is the game is over
+     * Result is true if player1 won
      */
     public void createGamesTable() {
         try {
@@ -95,7 +102,8 @@ public class DatabaseManager {
                     + "(ID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,"
                     + "Player1 INT REFERENCES " + USERS_TABLE + "(ID),"
                     + "Player2 INT REFERENCES " + USERS_TABLE + "(ID),"
-                    + "Status BOOLEAN)";
+                    + "Status BOOLEAN,"
+                    + "Result BOOLEAN)";
             connection.createStatement().executeUpdate(sql);
             log.finer(GAMES_TABLE + " Table created successfully");
         } catch (SQLException ex) {
@@ -104,8 +112,8 @@ public class DatabaseManager {
     }
 
     /**
-     * creates the moves table. if the table already exists inform log and
-     * return.
+     * creates the moves table. if the table already exists inform fine and return.
+     * Table format: ID | GameID | ToSquare | FromSquare
      */
     public void createMovesTable() {
         try {
@@ -118,7 +126,6 @@ public class DatabaseManager {
             String sql = "CREATE TABLE " + MOVES_TABLE
                     + "(ID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, "
                     + "GameID INT REFERENCES " + GAMES_TABLE + "(ID),"
-                    + "PlayerID INT REFERENCES " + USERS_TABLE + "(ID),"
                     + "FromSquare VARCHAR(2),"
                     + "ToSquare VARCHAR(2))";
             connection.createStatement().executeUpdate(sql);
@@ -132,16 +139,17 @@ public class DatabaseManager {
      * Adds a user with the given username.
      *
      * @param username the username of the user to be added
-     * @return 0 on success 1 if the given username is invalid (inform with
-     * finest log) 2 if a user with the given username already exists (inform
-     * with finest log) 3 on miscellaneous error (inform with severe log)
+     * @return 0 on success
+     * 1 if the given username is invalid (inform with finest log)
+     * 2 if a user with the given username already exists (inform with finest log)
+     * 3 on miscellaneous error (inform with severe log)
      */
     public int addUser(String username) {
         if (!username.matches("[a-zA-Z0-9]+") || username.length() > 50) {
             log.finest("CREATE USER: invalid name condition.");
             return 1;
         }
-        if (checkUserExists(username)) {
+        if (userExists(username)) {
             log.finest("CREATE USER: name taken condition.");
             return 2;
         }
@@ -162,9 +170,10 @@ public class DatabaseManager {
      * Increments the win count of a user with the given username.
      *
      * @param username the username of the user to increment the win count of
-     * @return 0 on success 1 if the given username is invalid (inform with
-     * severe log) 2 if no user exists with the given username (inform with
-     * severe log) 3 on miscellaneous error (inform with severe log)
+     * @return 0 on success
+     * 1 if the given username is invalid (inform with severe log)
+     * 2 if no user exists with the given username (inform with severe log)
+     * 3 on miscellaneous error (inform with severe log)
      */
     public int incrementWins(String username) {
         if (!username.matches("[a-zA-Z0-9]+") || username.length() > 50) {
@@ -172,7 +181,7 @@ public class DatabaseManager {
             return 1;
         }
         try {
-            if (!checkUserExists(username)) {
+            if (!userExists(username)) {
                 log.severe("INCREMENTWINS: No user found with username: " + username);
                 return 2;
             }
@@ -198,9 +207,10 @@ public class DatabaseManager {
      * Increments the loss count of a user with the given username.
      *
      * @param username the username of the user to increment the loss count of
-     * @return 0 on success 1 if the given username is invalid (inform with
-     * severe log) 2 if no user exists with the given username (inform with
-     * severe log) 3 on miscellaneous error (inform with severe log)
+     * @return 0 on success,
+     * 1 if the given username is invalid (inform with severe log),
+     * 2 if no user exists with the given username (inform with severe log),
+     * 3 on miscellaneous error (inform with severe log)
      */
     public int incrementLosses(String username) {
         if (!username.matches("[a-zA-Z0-9]+") || username.length() > 50) {
@@ -208,7 +218,7 @@ public class DatabaseManager {
             return 1;
         }
         try {
-            if (!checkUserExists(username)) {
+            if (!userExists(username)) {
                 log.severe("INCREMENTLOSSES: No user found with username: " + username);
                 return 2;
             }
@@ -231,16 +241,16 @@ public class DatabaseManager {
     }
 
     /**
-     * Checks if a user with the given username exists.
+     * if a user with the given username exists.
      *
      * @param username the username to check
      * @return true if a user with the given username exists, false otherwise
      */
-    private boolean checkUserExists(String username) {
+    private boolean userExists(String username) {
         try {
             PreparedStatement statement = connection.prepareStatement(
                     "SELECT COUNT(*) FROM " + USERS_TABLE
-                    + " WHERE username = ?"
+                            + " WHERE username = ?"
             );
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
@@ -255,7 +265,13 @@ public class DatabaseManager {
         return false;
     }
 
-    public List<Move> loadMovesForGame(int gameID) {
+    /**
+     * Constructs a list of moves for the given game entry.
+     *
+     * @param gameID the ID of the game to retrieve the moves for
+     * @return a list of moves
+     */
+    public List<Move> movesForGame(int gameID) {
         // Retrieve the moves associated with the given game entry from the database
         List<Move> moves = new ArrayList<>();
 
@@ -278,7 +294,14 @@ public class DatabaseManager {
         }
         return moves;
     }
-    public void saveMovesForGame(int gameID, List<Move> moves) {
+
+    /**
+     * Writes a new set of moves to the database for the given game entry.
+     *
+     * @param gameID the ID of the game entry to associate the moves with
+     * @param moves  the moves to write to the database
+     */
+    public void writeMovesForGame(int gameID, List<Move> moves) {
         // Delete existing moves for the given gameID
         deleteMovesForGame(gameID);
         // Save the moves to the database, associating them with the given game entry
@@ -288,8 +311,8 @@ public class DatabaseManager {
             );
             for (Move move : moves) {
                 statement.setInt(1, gameID);
-                statement.setString(2, move.getFrom().toString());
-                statement.setString(3, move.getTo().toString());
+                statement.setString(2, String.valueOf((move.getFrom().getCol() + 'a') + move.getFrom().getRow()));
+                statement.setString(3, String.valueOf((move.getTo().getCol() + 'a') + move.getTo().getRow()));
                 statement.executeUpdate();
             }
         } catch (SQLException ex) {
@@ -297,6 +320,12 @@ public class DatabaseManager {
                     + ". Error message: " + ex.getMessage());
         }
     }
+
+    /**
+     * Deletes all moves associated with the given gameID from the database.
+     *
+     * @param gameID the gameID of the game whose moves should be deleted
+     */
     private void deleteMovesForGame(int gameID) {
         try {
             PreparedStatement statement = connection.prepareStatement(
@@ -310,6 +339,9 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * @return a list of all usernames in the database
+     */
     public List<String> getUserNames() {
         List<String> usernames = new ArrayList<>();
         try {
@@ -326,7 +358,12 @@ public class DatabaseManager {
         return usernames;
     }
 
-    // get games for user, List String {gameID,status}
+    /**
+     * gets the game names for a given user
+     *
+     * @param username the user to get the games for
+     * @return a list of game names
+     */
     public List<String> getGameNames(String username) {
         List<String> games = new ArrayList<>();
         try {

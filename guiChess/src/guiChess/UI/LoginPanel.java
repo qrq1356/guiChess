@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 
 public class LoginPanel extends JPanel {
     private SessionManager sessionManager;
-    // dynamic components needing higher scope.
+    // dynamic components need higher scope.
     private JList<String> userList;
     private JLabel loginSelectErrorLabel;
     private JTextField createNameField;
