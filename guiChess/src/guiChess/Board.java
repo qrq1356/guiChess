@@ -13,7 +13,7 @@ public class Board {
     public void addStartingPieces(Player owner) {
         int p = owner.getPawnRow();
         for (int c = 0; c < NUM_COLS; c++) {
-            board[c][p] = new Pawn(owner, this);
+            board[p][c] = new Pawn(owner, this);
         }
         int b = owner.getBackRow();
         board[b][0] = new Rook(owner, this);
@@ -47,13 +47,18 @@ public class Board {
         }
         return null;
     }
+    public boolean matchingOwner(Position pos, Player owner) {
+        if (board[pos.getRow()][pos.getCol()] == null) {
+            return false;
+        } else {
+            return board[pos.getRow()][pos.getCol()].getOwner() == owner;
+        }
+    }
     public boolean isPathFree(Position from, Position to) {
-        // determine direction
-        int rowDif = from.getRow() - to.getRow();
-        int colDif = from.getCol() - to.getCol();
-        int rowDir = (rowDif == 0) ? 0 : rowDif / Math.abs(rowDif);
-        int colDir = (colDif == 0) ? 0 : colDif / Math.abs(colDif);
-        // make the first step, as the from position may be ocupied
+        //direction calculation check
+        int rowDir = (to.getRow() - from.getRow() == 0) ? 0 : (to.getRow() - from.getRow()) / Math.abs(to.getRow() - from.getRow());
+        int colDir = (to.getCol() - from.getCol() == 0) ? 0 : (to.getCol() - from.getCol()) / Math.abs(to.getCol() - from.getCol());
+        //loop over between all squares between to and from
         int row = from.getRow() + rowDir;
         int col = from.getCol() + colDir;
         // loop over each space between
@@ -66,6 +71,7 @@ public class Board {
         }
         return true;
     }
+
     public List<Move> getValidMoves(Player player) {
         List<Move> validMoves = new ArrayList<>();
         for (int r = 0; r < NUM_ROWS; r++) {

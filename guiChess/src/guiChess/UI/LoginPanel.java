@@ -11,7 +11,6 @@ public class LoginPanel extends JPanel {
     private final SessionManager sessionManager;
     // dynamic components need higher scope.
     private JList<String> userList;
-    private JLabel loginSelectErrorLabel;
     private JTextField createNameField;
     private JLabel createErrorLabel;
 
@@ -102,21 +101,12 @@ public class LoginPanel extends JPanel {
         listScroller.setPreferredSize(new Dimension(200, 200));
         c.gridx = 0;
         c.gridy = 0;
-        c.gridwidth = 3;
         owner.add(listScroller, c);
         // Login button
         JButton loginButton = new JButton("Login");
         loginButton.addActionListener(new LoginButtonListener());
-        c.gridx = 0;
         c.gridy = 1;
-        c.gridwidth = 1;
         owner.add(loginButton, c);
-        // Error label
-        loginSelectErrorLabel = new JLabel();
-        c.gridx = 0;
-        c.gridy = 2;
-        c.gridwidth = 3;
-        owner.add(loginSelectErrorLabel, c);
     }
 
     private class CreateUserButtonListener implements ActionListener {
@@ -125,6 +115,7 @@ public class LoginPanel extends JPanel {
             int i = sessionManager.createUser(createNameField.getText());
             switch(i) {
                 case 0:
+                    System.out.println(createNameField.getText());
                     sessionManager.loadUser(createNameField.getText());
                     sessionManager.toUser();
                     break;
@@ -143,6 +134,7 @@ public class LoginPanel extends JPanel {
     private class LoginButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            System.out.println(userList.getSelectedValue());
             sessionManager.loadUser(userList.getSelectedValue());
             sessionManager.toUser();
         }

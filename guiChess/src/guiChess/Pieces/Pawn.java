@@ -17,7 +17,7 @@ public class Pawn extends Piece {
         Position pos = board.findPiece(this);
         if (pos.getRow() == owner.getPawnRow()) {
             Position target = new Position(pos.getRow() + (2 * owner.getDirection()), pos.getCol());
-            if(board.isPathFree(pos, new Position(pos.getRow(), pos.getCol()+2))) {
+            if(board.isPathFree(pos, new Position(pos.getRow() + 2, pos.getCol()))) {
                 if(board.getPieceAt(target) == null) {
                     legalMoves.add(new Move(pos, target));
                 }
@@ -30,7 +30,7 @@ public class Pawn extends Piece {
             int[] captureCols = {pos.getCol() + 1, pos.getCol() - 1};
             for (int targetCol: captureCols) {
                 Position target = new Position(pos.getRow()+owner.getDirection(), targetCol);
-                if (board.getPieceAt(target).getOwner() != owner) {
+                if (!board.matchingOwner(target, owner)) {
                     legalMoves.add(new Move(pos, target));
                 }
             }

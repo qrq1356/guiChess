@@ -19,7 +19,7 @@ public class Queen extends Piece {
         for (int i = 0;  i < pos.getRow(); i++) {
             // check positions in the same row
             if (i != pos.getRow()) {
-                if (board.getPieceAt(i, pos.getCol()).getOwner() != owner) {
+                if (!board.matchingOwner(new Position(i, pos.getCol()), owner)) {
                     if (board.isPathFree(pos, new Position(i, pos.getCol()))) {
                         legalMoves.add(new Move(pos, new Position(i, pos.getCol())));
                     }
@@ -27,7 +27,7 @@ public class Queen extends Piece {
             }
             // check positions in the same col
             if (i != pos.getCol()) {
-                if (board.getPieceAt(pos.getRow(), i).getOwner() != owner) {
+                if (!board.matchingOwner(new Position(pos.getRow(), i), owner)) {
                     if (board.isPathFree(pos, new Position(pos.getRow(), i))) {
                         legalMoves.add(new Move(pos, new Position(pos.getRow(), i)));
                     }
@@ -40,7 +40,7 @@ public class Queen extends Piece {
             int col = pos.getCol();
             while (row >= 0 && row < Board.NUM_ROWS && col >= 0 && col < Board.NUM_COLS) {
                 if (row != pos.getRow() || col != pos.getCol()) {
-                    if(board.getPieceAt(row, col).getOwner() != owner) {
+                    if(!board.matchingOwner(new Position(row, col), owner)) {
                         if(board.isPathFree(pos, new Position(row, col))) {
                             legalMoves.add(new Move(pos, new Position(row, col)));
                         }

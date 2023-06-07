@@ -30,7 +30,9 @@ public class SessionManager {
 
     // game management
     public void createGame() {
+        System.out.println("reached: " + currentUser + gameEngine.toString());
         dbm.newGame(currentUser);
+
     }
     public void loadGame(int id) {
         gameEngine.playGameFromList(dbm.movesForGame(id));
@@ -38,7 +40,10 @@ public class SessionManager {
 
     // user management
     public int createUser(String name) {return dbm.addUser(name);}
-    public void loadUser(String name) {gameEngine.initUp(new Human(name, true));}
+    public void loadUser(String name) {
+        currentUser = name;
+        gameEngine.initUp(new Human(name, true));
+    }
     public void loadBot() {gameEngine.initDown(new Bot("Bot", false));}
     // card movement
     public void toLogin() {mainFrame.showLogin();}

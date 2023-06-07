@@ -35,7 +35,13 @@ public class GameEngine {
             observer.onGameStateChange(this);
         }
     }
-
+    public void botMove() {
+        // get a random valid move for the bot
+        List<Move> validMoves = board.getValidMoves(current);
+        Move move = validMoves.get((int) (Math.random() * validMoves.size()));
+        // make the move
+        makeMove(move);
+    }
     public void playMove(Move move) {
         playMove(current, move);
     }
@@ -66,5 +72,8 @@ public class GameEngine {
         for (Move move : moves) {
             makeMove(move);
         }
+    }
+    public Piece getPieceAt(Position pos) {
+        return board.getPieceAt(pos);
     }
 }

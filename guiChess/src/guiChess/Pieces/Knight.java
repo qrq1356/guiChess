@@ -22,7 +22,7 @@ public class Knight extends Piece {
             int newRow = pos.getRow() + move[0];
             int newCol = pos.getCol() + move[1];
             if (newRow >= 0 && newRow < Board.NUM_ROWS && newCol >= 0 && newCol < Board.NUM_COLS) {
-                if(board.getPieceAt(newRow, newCol).getOwner() != owner) {
+                if(!board.matchingOwner(new Position(newRow, newCol), owner)) {
                     legalMoves.add(new Move(pos, new Position(newRow, newCol)));
                 }
             }

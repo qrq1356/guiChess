@@ -273,17 +273,37 @@ public class DatabaseManager {
      */
     public int newGame(String player1) {
         try {
-            PreparedStatement insert = connection.prepareStatement(
-                    "INSERT INTO " + GAMES_TABLE + " (Player1) VALUES (?)"
+            // Find Player1's UserID based on the provided username
+            PreparedStatement findPlayer1 = connection.prepareStatement(
+                    "SELECT UserID FROM " + USERS_TABLE + " WHERE username = ?"
             );
-            insert.setString(1, player1);
+            findPlayer1.setString(1, player1);
+            ResultSet player1Result = findPlayer1.executeQuery();
+
+            // Make sure Player1 exists in the database
+            if (!player1Result.next()) {
+                // Player1 doesn't exist, return an error code
+                return 1; // or any other suitable error code
+            }
+
+            int player1Id = player1Result.getInt("UserID");
+
+            // Insert a new game record with Player1's ID
+            PreparedStatement insert = connection.prepareStatement(
+                    "INSERT INTO " + GAMES_TABLE + " (Player1, Status, Result) VALUES (?, ?, ?)"
+            );
+            insert.setInt(1, player1Id);
+            insert.setBoolean(2, false);
+            insert.setBoolean(3, false);
             insert.executeUpdate();
+
             return 0;
         } catch (SQLException ex) {
-            log.severe("CREATE GAME: " + ex.getMessage());
-            return 3;
+            log.severe("newGame: " + ex.getMessage());
+            return 3; // or any other suitable error code
         }
     }
+
 
     /**
      * Constructs a list of moves for the given game entry.
@@ -387,15 +407,26 @@ public class DatabaseManager {
     public List<String> getGameNames(String username) {
         List<String> games = new ArrayList<>();
         try {
-            PreparedStatement statement = connection.prepareStatement(
-                    "SELECT GameID, Status FROM " + GAMES_TABLE + " WHERE Player1 = ? OR Player2 = ?"
+            // Find Player1's UserID based on the provided username
+            PreparedStatement findPlayer1 = connection.prepareStatement(
+                    "SELECT UserID FROM " + USERS_TABLE + " WHERE username = ?"
             );
-            statement.setString(1, username);
-            statement.setString(2, username);
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                games.add(resultSet.getString("GameID"));
-                games.add(resultSet.getString("Status"));
+            findPlayer1.setString(1, username);
+            ResultSet player1Result = findPlayer1.executeQuery();
+
+            if (player1Result.next()) {
+                int player1Id = player1Result.getInt("UserID");
+
+                // Retrieve games for Player1's UserID
+                PreparedStatement statement = connection.prepareStatement(
+                        "SELECT GameID, Status FROM " + GAMES_TABLE + " WHERE Player1 = ?"
+                );
+                statement.setInt(1, player1Id);
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    games.add(resultSet.getString("GameID"));
+                    games.add(resultSet.getString("Status"));
+                }
             }
         } catch (SQLException ex) {
             log.severe("getGameNames: Error getting games for user: " + username
@@ -403,4 +434,6 @@ public class DatabaseManager {
         }
         return games;
     }
+
+
 }
