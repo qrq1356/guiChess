@@ -14,9 +14,8 @@ public class GameEngine {
         board = new Board();
         moves = new ArrayList<>();
     }
-    public void initPlayers(Player up, Player down) {
-        this.up = up;
-        this.down = down;
+    public void initPlayer(Player given) {
+        this.up = given;
         current = up;
         board.addStartingPieces(up);
         board.addStartingPieces(down);
@@ -32,6 +31,7 @@ public class GameEngine {
             observer.onGameStateChange(this);
         }
     }
+
 
     public void playMove(Move move) {
         playMove(current, move);

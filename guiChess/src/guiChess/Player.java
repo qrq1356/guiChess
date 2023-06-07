@@ -1,6 +1,7 @@
 package guiChess;
 
 public abstract class Player {
+    protected String name;
     protected boolean isUp;
     public int getPawnRow() {
         return isUp ? 1 : 6;

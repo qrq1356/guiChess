@@ -11,41 +11,77 @@ public class LoginPanel extends JPanel {
     private SessionManager sessionManager;
     private JList<String> userList;
     private JTextField createNameField;
+    private JLabel createErrorLabel;
     public LoginPanel(SessionManager sessionManager) {
         this.sessionManager = sessionManager;
         initializeUI();
     }
-    private void initializeUI () {
-        setLayout(new BorderLayout());
-        // header
-        JLabel headerText = new JLabel("Welcome to Chess");
-        headerText.setFont(new Font("Arial", Font.BOLD, 24));
-        headerText.setHorizontalAlignment(SwingConstants.CENTER);
-        add(headerText, BorderLayout.NORTH);
+    private void initializeUI() {
+        setLayout(new GridLayout(3, 1, 0, 20));
+        // Header
+        JPanel headerPanel = new JPanel();
+        headerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        JLabel headerLabel = new JLabel("Welcome to Chess");
+        headerPanel.add(headerLabel);
+        add(headerPanel);
+
+        // Login
+        JPanel loginPanel = new JPanel();
+        loginPanel.setLayout(new GridLayout(1,2,0,0));
+        loginPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+
         // user list
         userList = new JList<>(sessionManager.getUserNames());
-        add(new JScrollPane(userList), BorderLayout.WEST);
-        // user login panel
-        JPanel userLoginPanel = new JPanel();
-        add(userLoginPanel, BorderLayout.EAST);
-        JButton loginButton = new JButton("Login");
-        userLoginPanel.add(loginButton);
-        // user create panel
-        JPanel userCreatePanel = new JPanel();
-        add(userCreatePanel, BorderLayout.SOUTH);
+        loginPanel.add(new JScrollPane(userList));
+        // login button
+        JButton LoginButton = new JButton("Login");
+        loginPanel.add(LoginButton);
 
+        add(loginPanel);
+        // create
+        JPanel createPanel = new JPanel();
+        createPanel.setLayout(new GridLayout(1,1,0,0));
+        createPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
+        // create name field
+        createNameField = new JTextField(10);
+        createPanel.add(createNameField);
+
+        // create button
         JButton createButton = new JButton("Create User");
         createButton.addActionListener(new CreateUserButtonListener());
-        createNameField = new JTextField(10);
-
-        userCreatePanel.add(createNameField);
-        userCreatePanel.add(createButton);
+        createPanel.add(createButton);
+        add(createPanel);
+        // create error label
+        createErrorLabel = new JLabel();
+        createPanel.add(createErrorLabel);
     }
     private class CreateUserButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            sessionManager.createUser(createNameField.getText());
-            System.out.println("button pressed" + createNameField.getText());
+            int i = sessionManager.createUser(createNameField.getText());
+            switch(i) {
+                case 0:
+                    sessionManager.loadUser(createNameField.getText());
+                    sessionManager.toUser();
+                    break;
+                case 1:
+                    createErrorLabel.setText("Invalid username. [a-zA-Z0-9] | [<50]");
+                    break;
+                case 2:
+                    createErrorLabel.setText("Username already exists.");
+                    break;
+                case 3:
+                    createErrorLabel.setText("Unknown error.");
+                    break;
+            }
+        }
+    }
+    private class LoginButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            sessionManager.loadUser(userList.getSelectedValue());
+            sessionManager.toUser();
         }
     }
 }

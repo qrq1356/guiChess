@@ -15,6 +15,7 @@ public class SessionManager {
     private DatabaseManager dbm = new DatabaseManager();
     private GameEngine gameEngine = new GameEngine();
     private MainFrame mainFrame;
+    private String currentUser;
     public SessionManager() {
         // init database
         dbm.connect();
@@ -24,6 +25,7 @@ public class SessionManager {
         this.mainFrame = new MainFrame(this);
         mainFrame.setVisible(true);
         log.info("UI shown to user");
+        loadBot();
     }
     public DefaultListModel<String> getUserNames() {
         DefaultListModel<String> listModel = new DefaultListModel<>();
@@ -32,10 +34,27 @@ public class SessionManager {
         }
         return listModel;
     }
-    // create and load a user with the given name
-    public void createUser(String name) {
-        dbm.addUser(name);
+
+    public int createUser(String name) {
+        int i = dbm.addUser(name);
+        return i;
     }
+    public void loadUser(String name) {
+        gameEngine.initPlayer(new Human(name, true));
+    }
+    public void loadBot() {
+        gameEngine.initPlayer(new Bot("Bot", false));
+    }
+    public void toLogin() {
+        mainFrame.showLogin();
+    }
+    public void toUser() {
+        mainFrame.showUser();
+    }
+    public void toChess() {
+        mainFrame.showChess();
+    }
+
     public GameEngine getGameEngine() {
         return gameEngine;
     }

@@ -139,7 +139,7 @@ public class DatabaseManager {
     public int addUser(String username) {
         if (!username.matches("[a-zA-Z0-9]+") || username.length() > 50) {
             log.finest("CREATE USER: invalid name condition.");
-            return 2;
+            return 1;
         }
         if (checkUserExists(username)) {
             log.finest("CREATE USER: name taken condition.");
