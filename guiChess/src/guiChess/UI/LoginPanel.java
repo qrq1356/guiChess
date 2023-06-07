@@ -1,61 +1,141 @@
 package guiChess.UI;
 
 import guiChess.SessionManager;
-
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginPanel extends JPanel {
     private SessionManager sessionManager;
+    // dynamic components needing higher scope.
     private JList<String> userList;
+    private JLabel loginSelectErrorLabel;
     private JTextField createNameField;
     private JLabel createErrorLabel;
+
     public LoginPanel(SessionManager sessionManager) {
         this.sessionManager = sessionManager;
         initializeUI();
     }
     private void initializeUI() {
-        setLayout(new GridLayout(3, 1, 0, 20));
-        // Header
+        // layout
+        setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        // border with padding construct
+        Border softBevel = BorderFactory.createSoftBevelBorder(0);
+        // header panel
         JPanel headerPanel = new JPanel();
-        headerPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        headerPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-        JLabel headerLabel = new JLabel("Welcome to Chess");
-        headerPanel.add(headerLabel);
-        add(headerPanel);
-
-        // Login
-        JPanel loginPanel = new JPanel();
-        loginPanel.setLayout(new GridLayout(1,2,0,0));
-        loginPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-
-        // user list
-        userList = new JList<>(sessionManager.getUserNames());
-        loginPanel.add(new JScrollPane(userList));
-        // login button
-        JButton LoginButton = new JButton("Login");
-        loginPanel.add(LoginButton);
-
-        add(loginPanel);
-        // create
+        headerPanel.setBorder(softBevel);
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 1;
+        c.weighty = 0.1;
+        c.gridx = 1;
+        c.gridy = 0;
+        add(headerPanel, c);
+        constructHeaderPanel(headerPanel);
+        // User Login Panel
+        JPanel selectPanel = new JPanel();
+        selectPanel.setBorder(softBevel);
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 1;
+        c.weighty = 0.6;
+        c.gridx = 1;
+        c.gridy = 1;
+        add(selectPanel, c);
+        constructSelectPanel(selectPanel);
+        // User Create Panel
         JPanel createPanel = new JPanel();
-        createPanel.setLayout(new GridLayout(1,1,0,0));
-        createPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 20));
-        // create name field
-        createNameField = new JTextField(10);
-        createPanel.add(createNameField);
-
-        // create button
-        JButton createButton = new JButton("Create User");
-        createButton.addActionListener(new CreateUserButtonListener());
-        createPanel.add(createButton);
-        add(createPanel);
-        // create error label
-        createErrorLabel = new JLabel();
-        createPanel.add(createErrorLabel);
+        createPanel.setBorder(softBevel);
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 1;
+        c.weighty = 0.3;
+        c.gridx = 1;
+        c.gridy = 2;
+        add(createPanel, c);
+        constructCreatePanel(createPanel);
+        // Empty space panels on the left and right
+        JPanel leftSpacePanel = new JPanel();
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 0.5;
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridheight = 3;
+        add(leftSpacePanel, c);
+        JPanel rightSpacePanel = new JPanel();
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 0.5;
+        c.gridx = 2;
+        c.gridy = 0;
+        c.gridheight = 3;
+        add(rightSpacePanel, c);
     }
+    private void constructHeaderPanel(JPanel owner) {
+        JLabel headerLabel = new JLabel("Welcome to Chess!");
+        headerLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        // vertically center the label in the owner panel
+        owner.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.CENTER;
+        c.gridx = 0;
+        c.gridy = 0;
+        owner.add(headerLabel);
+    }
+    private void constructCreatePanel(JPanel owner) {
+        owner.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        // Username label
+        JLabel createNameLabel = new JLabel("Username:");
+        c.gridx = 0;
+        c.gridy = 1;
+        owner.add(createNameLabel, c);
+        // Username text field
+        createNameField = new JTextField();
+        createNameField.setPreferredSize(new Dimension(200, 30));
+        c.gridx = 1;
+        owner.add(createNameField, c);
+        // Create button
+        JButton createButton = new JButton("Create");
+        createButton.addActionListener(new CreateUserButtonListener());
+        c.gridx = 2;
+        owner.add(createButton, c);
+        // Error label
+        createErrorLabel = new JLabel();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 3;
+        owner.add(createErrorLabel, c);
+    }
+    private void constructSelectPanel(JPanel owner) {
+        owner.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        // User list
+        userList = new JList<>(sessionManager.getUserNames());
+        userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        userList.setLayoutOrientation(JList.VERTICAL);
+        userList.setVisibleRowCount(-1);
+        JScrollPane listScroller = new JScrollPane(userList);
+        listScroller.setPreferredSize(new Dimension(200, 200));
+        c.gridx = 0;
+        c.gridy = 0;
+        c.gridwidth = 3;
+        owner.add(listScroller, c);
+        // Login button
+        JButton loginButton = new JButton("Login");
+        loginButton.addActionListener(new LoginButtonListener());
+        c.gridx = 0;
+        c.gridy = 1;
+        c.gridwidth = 1;
+        owner.add(loginButton, c);
+        // Error label
+        loginSelectErrorLabel = new JLabel();
+        c.gridx = 0;
+        c.gridy = 2;
+        c.gridwidth = 3;
+        owner.add(loginSelectErrorLabel, c);
+    }
+
     private class CreateUserButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {

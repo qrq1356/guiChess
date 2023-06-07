@@ -325,4 +325,25 @@ public class DatabaseManager {
         }
         return usernames;
     }
+
+    // get games for user, List String {gameID,status}
+    public List<String> getGameNames(String username) {
+        List<String> games = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT GameID, Status FROM " + GAMES_TABLE + " WHERE Player1 = ? OR Player2 = ?"
+            );
+            statement.setString(1, username);
+            statement.setString(2, username);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                games.add(resultSet.getString("GameID"));
+                games.add(resultSet.getString("Status"));
+            }
+        } catch (SQLException ex) {
+            log.severe("GETGAMESFORUSER: Error getting games for user: " + username
+                    + ". Error message: " + ex.getMessage());
+        }
+        return games;
+    }
 }

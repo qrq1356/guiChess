@@ -27,6 +27,13 @@ public class SessionManager {
         log.info("UI shown to user");
         loadBot();
     }
+    public DefaultListModel<String> getGameNames() {
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        for (String name : dbm.getGameNames(currentUser)) {
+            listModel.addElement(name);
+        }
+        return listModel;
+    }
     public DefaultListModel<String> getUserNames() {
         DefaultListModel<String> listModel = new DefaultListModel<>();
         for (String name : dbm.getUserNames()) {
@@ -40,10 +47,10 @@ public class SessionManager {
         return i;
     }
     public void loadUser(String name) {
-        gameEngine.initPlayer(new Human(name, true));
+        gameEngine.initUp(new Human(name, true));
     }
     public void loadBot() {
-        gameEngine.initPlayer(new Bot("Bot", false));
+        gameEngine.initDown(new Bot("Bot", false));
     }
     public void toLogin() {
         mainFrame.showLogin();

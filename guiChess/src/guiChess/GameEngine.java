@@ -14,12 +14,16 @@ public class GameEngine {
         board = new Board();
         moves = new ArrayList<>();
     }
-    public void initPlayer(Player given) {
+    public void initUp(Player given) {
         this.up = given;
         current = up;
         board.addStartingPieces(up);
+    }
+    public void initDown(Player given) {
+        this.down = given;
         board.addStartingPieces(down);
     }
+
     public void registerObserver(GameObserver observer) {
         observers.add(observer);
     }
