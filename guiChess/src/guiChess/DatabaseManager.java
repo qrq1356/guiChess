@@ -72,7 +72,7 @@ public class DatabaseManager {
             }
             result.close();
             String sql = "CREATE TABLE " + USERS_TABLE
-                    + "(id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,"
+                    + "(UserID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,"
                     + "username VARCHAR(50) NOT NULL,"
                     + "wins INT DEFAULT 0,"
                     + "losses INT DEFAULT 0)";
@@ -90,6 +90,7 @@ public class DatabaseManager {
      * Status is true is the game is over
      * Result is true if player1 won
      */
+    // if every game must be owned by a user, then a foreign key constraint is needed.
     public void createGamesTable() {
         try {
             DatabaseMetaData meta = connection.getMetaData();
@@ -99,9 +100,9 @@ public class DatabaseManager {
             }
             result.close();
             String sql = "CREATE TABLE " + GAMES_TABLE
-                    + "(ID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,"
-                    + "Player1 INT REFERENCES " + USERS_TABLE + "(ID),"
-                    + "Player2 INT REFERENCES " + USERS_TABLE + "(ID),"
+                    + "(GameID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,"
+                    + "Player1 INT REFERENCES " + USERS_TABLE + "(UserID),"
+                    + "Player2 INT REFERENCES " + USERS_TABLE + "(UserID),"
                     + "Status BOOLEAN,"
                     + "Result BOOLEAN)";
             connection.createStatement().executeUpdate(sql);
@@ -124,8 +125,8 @@ public class DatabaseManager {
             }
             result.close();
             String sql = "CREATE TABLE " + MOVES_TABLE
-                    + "(ID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, "
-                    + "GameID INT REFERENCES " + GAMES_TABLE + "(ID),"
+                    + "(MoveID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY, "
+                    + "GameID INT REFERENCES " + GAMES_TABLE + "(GameID),"
                     + "FromSquare VARCHAR(2),"
                     + "ToSquare VARCHAR(2))";
             connection.createStatement().executeUpdate(sql);
@@ -263,6 +264,25 @@ public class DatabaseManager {
                     + ". Error message: " + ex.getMessage());
         }
         return false;
+    }
+
+    /**
+     * Adds a game entry to the database with a new game ID
+     * with player1 as a given Users name string
+     * it should account for the input being a string and the ID needing to be set to a user entry
+     */
+    public int newGame(String player1) {
+        try {
+            PreparedStatement insert = connection.prepareStatement(
+                    "INSERT INTO " + GAMES_TABLE + " (Player1) VALUES (?)"
+            );
+            insert.setString(1, player1);
+            insert.executeUpdate();
+            return 0;
+        } catch (SQLException ex) {
+            log.severe("CREATE GAME: " + ex.getMessage());
+            return 3;
+        }
     }
 
     /**

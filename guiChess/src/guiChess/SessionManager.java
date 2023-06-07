@@ -27,6 +27,27 @@ public class SessionManager {
         log.info("UI shown to user");
         loadBot();
     }
+
+    // game management
+    public void createGame() {
+        dbm.newGame(currentUser);
+    }
+    public void loadGame(int id) {
+        gameEngine.playGameFromList(dbm.movesForGame(id));
+    }
+
+    // user management
+    public int createUser(String name) {return dbm.addUser(name);}
+    public void loadUser(String name) {gameEngine.initUp(new Human(name, true));}
+    public void loadBot() {gameEngine.initDown(new Bot("Bot", false));}
+    // card movement
+    public void toLogin() {mainFrame.showLogin();}
+    public void toUser() {mainFrame.showUser();}
+    public void toChess() {mainFrame.showChess();}
+    // getters
+    public GameEngine getGameEngine() {
+        return gameEngine;
+    }
     public DefaultListModel<String> getGameNames() {
         DefaultListModel<String> listModel = new DefaultListModel<>();
         for (String name : dbm.getGameNames(currentUser)) {
@@ -40,29 +61,5 @@ public class SessionManager {
             listModel.addElement(name);
         }
         return listModel;
-    }
-
-    public int createUser(String name) {
-        int i = dbm.addUser(name);
-        return i;
-    }
-    public void loadUser(String name) {
-        gameEngine.initUp(new Human(name, true));
-    }
-    public void loadBot() {
-        gameEngine.initDown(new Bot("Bot", false));
-    }
-    public void toLogin() {
-        mainFrame.showLogin();
-    }
-    public void toUser() {
-        mainFrame.showUser();
-    }
-    public void toChess() {
-        mainFrame.showChess();
-    }
-
-    public GameEngine getGameEngine() {
-        return gameEngine;
     }
 }

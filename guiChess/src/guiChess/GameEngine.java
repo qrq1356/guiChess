@@ -36,7 +36,6 @@ public class GameEngine {
         }
     }
 
-
     public void playMove(Move move) {
         playMove(current, move);
     }
