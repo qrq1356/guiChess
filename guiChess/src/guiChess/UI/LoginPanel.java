@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginPanel extends JPanel {
-    private SessionManager sessionManager;
+    private final SessionManager sessionManager;
     // dynamic components need higher scope.
     private JList<String> userList;
     private JLabel loginSelectErrorLabel;
@@ -22,65 +22,48 @@ public class LoginPanel extends JPanel {
     private void initializeUI() {
         // layout
         setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints();
-        // border with padding construct
+        GridBagConstraints c = new GridBagConstraints(1,0,1,1,1,0.1,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets(10,0,10,0), 0, 0);
         Border softBevel = BorderFactory.createSoftBevelBorder(0);
         // header panel
         JPanel headerPanel = new JPanel();
         headerPanel.setBorder(softBevel);
-        c.fill = GridBagConstraints.BOTH;
-        c.weightx = 1;
-        c.weighty = 0.1;
-        c.gridx = 1;
-        c.gridy = 0;
         add(headerPanel, c);
         constructHeaderPanel(headerPanel);
         // User Login Panel
         JPanel selectPanel = new JPanel();
         selectPanel.setBorder(softBevel);
-        c.fill = GridBagConstraints.BOTH;
-        c.weightx = 1;
         c.weighty = 0.6;
-        c.gridx = 1;
         c.gridy = 1;
         add(selectPanel, c);
         constructSelectPanel(selectPanel);
         // User Create Panel
         JPanel createPanel = new JPanel();
         createPanel.setBorder(softBevel);
-        c.fill = GridBagConstraints.BOTH;
-        c.weightx = 1;
         c.weighty = 0.3;
-        c.gridx = 1;
         c.gridy = 2;
         add(createPanel, c);
         constructCreatePanel(createPanel);
         // Empty space panels on the left and right
-        JPanel leftSpacePanel = new JPanel();
         c.fill = GridBagConstraints.BOTH;
         c.weightx = 0.5;
-        c.gridx = 0;
         c.gridy = 0;
         c.gridheight = 3;
+        JPanel leftSpacePanel = new JPanel();
+        c.gridx = 0;
         add(leftSpacePanel, c);
         JPanel rightSpacePanel = new JPanel();
-        c.fill = GridBagConstraints.BOTH;
-        c.weightx = 0.5;
         c.gridx = 2;
-        c.gridy = 0;
-        c.gridheight = 3;
         add(rightSpacePanel, c);
     }
     private void constructHeaderPanel(JPanel owner) {
         JLabel headerLabel = new JLabel("Welcome to Chess!");
         headerLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        // vertically center the label in the owner panel
         owner.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.anchor = GridBagConstraints.CENTER;
-        c.gridx = 0;
-        c.gridy = 0;
-        owner.add(headerLabel);
+        owner.add(headerLabel, c);
     }
     private void constructCreatePanel(JPanel owner) {
         owner.setLayout(new GridBagLayout());

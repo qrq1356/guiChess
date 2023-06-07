@@ -77,7 +77,7 @@ public class DatabaseManager {
                     + "wins INT DEFAULT 0,"
                     + "losses INT DEFAULT 0)";
             connection.createStatement().executeUpdate(sql);
-            log.finer("USERS TABLE CREATED SUCCCESSFULLY");
+            log.finer("USERS TABLE CREATED SUCCESSFULLY");
         } catch (SQLException ex) {
             log.severe("CREATE TABLE USER: " + ex.getMessage());
         }
@@ -141,8 +141,8 @@ public class DatabaseManager {
      *
      * @param username the username of the user to be added
      * @return 0 on success
-     * 1 if the given username is invalid (inform with finest log)
-     * 2 if a user with the given username already exists (inform with finest log)
+     * 1 if the given username is invalid and inform finest
+     * 2 if a user with the given username already exists and inform finest
      * 3 on miscellaneous error (inform with severe log)
      */
     public int addUser(String username) {
@@ -178,12 +178,12 @@ public class DatabaseManager {
      */
     public int incrementWins(String username) {
         if (!username.matches("[a-zA-Z0-9]+") || username.length() > 50) {
-            log.severe("INCREMENTWINS: Invalid username: " + username);
+            log.severe("incrementWins: Invalid username: " + username);
             return 1;
         }
         try {
             if (!userExists(username)) {
-                log.severe("INCREMENTWINS: No user found with username: " + username);
+                log.severe("incrementWins: No user found with username: " + username);
                 return 2;
             }
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -194,11 +194,11 @@ public class DatabaseManager {
             if (rowsAffected > 0) {
                 return 0;
             } else {
-                log.severe("INCREMENTWINS: Failed with username: " + username);
+                log.severe("incrementWins: Failed with username: " + username);
                 return 3;
             }
         } catch (SQLException ex) {
-            log.severe("INCREMENTWINS: SQLException with: " + username
+            log.severe("incrementWins: SQLException with: " + username
                     + ". Error message: " + ex.getMessage());
             return 3;
         }
@@ -215,12 +215,12 @@ public class DatabaseManager {
      */
     public int incrementLosses(String username) {
         if (!username.matches("[a-zA-Z0-9]+") || username.length() > 50) {
-            log.severe("INCREMENTLOSSES: Invalid username: " + username);
+            log.severe("incrementLosses: Invalid username: " + username);
             return 1;
         }
         try {
             if (!userExists(username)) {
-                log.severe("INCREMENTLOSSES: No user found with username: " + username);
+                log.severe("incrementLosses: No user found with username: " + username);
                 return 2;
             }
             PreparedStatement preparedStatement = connection.prepareStatement(
@@ -231,11 +231,11 @@ public class DatabaseManager {
             if (rowsAffected > 0) {
                 return 0; // Success
             } else {
-                log.severe("INCREMENTLOSSES: Failed with username: " + username);
+                log.severe("incrementLosses: Failed with username: " + username);
                 return 3; // Miscellaneous failure
             }
         } catch (SQLException ex) {
-            log.severe("INCREMENTLOSSES: SQLException with: " + username
+            log.severe("incrementLosses: SQLException with: " + username
                     + ". Error message: " + ex.getMessage());
             return 3; // Miscellaneous failure
         }
@@ -260,7 +260,7 @@ public class DatabaseManager {
                 return count > 0;
             }
         } catch (SQLException ex) {
-            log.severe("CHECKUSEREXISTS: Error checking user: " + username
+            log.severe("userExists: Error checking user: " + username
                     + ". Error message: " + ex.getMessage());
         }
         return false;
@@ -309,7 +309,7 @@ public class DatabaseManager {
                 moves.add(move);
             }
         } catch (SQLException ex) {
-            log.severe("LOADMOVESFORGAME: Error loading moves for game: " + gameID
+            log.severe("movesForGame: Error loading moves for game: " + gameID
                     + ". Error message: " + ex.getMessage());
         }
         return moves;
@@ -336,7 +336,7 @@ public class DatabaseManager {
                 statement.executeUpdate();
             }
         } catch (SQLException ex) {
-            log.severe("SAVEMOVESFORGAME: Error saving moves for game: " + gameID
+            log.severe("writeMovesForGame: Error saving moves for game: " + gameID
                     + ". Error message: " + ex.getMessage());
         }
     }
@@ -354,7 +354,7 @@ public class DatabaseManager {
             statement.setInt(1, gameID);
             statement.executeUpdate();
         } catch (SQLException ex) {
-            log.severe("DELETEMOVESFORGAME: Error deleting moves for game: " + gameID
+            log.severe("deleteMovesForGame: Error deleting moves for game: " + gameID
                     + ". Error message: " + ex.getMessage());
         }
     }
@@ -373,7 +373,7 @@ public class DatabaseManager {
                 usernames.add(resultSet.getString("username"));
             }
         } catch (SQLException ex) {
-            log.severe("GETUSERNAMES: Error getting user names:" + ex.getMessage());
+            log.severe("getUserNames: Error getting user names:" + ex.getMessage());
         }
         return usernames;
     }
@@ -398,7 +398,7 @@ public class DatabaseManager {
                 games.add(resultSet.getString("Status"));
             }
         } catch (SQLException ex) {
-            log.severe("GETGAMESFORUSER: Error getting games for user: " + username
+            log.severe("getGameNames: Error getting games for user: " + username
                     + ". Error message: " + ex.getMessage());
         }
         return games;

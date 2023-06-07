@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class UserPanel extends JPanel {
-    private SessionManager sessionManager;
+    private final SessionManager sessionManager;
     // dynamic components need higher scope.
     private JList<String> gameList;
 
@@ -104,13 +104,15 @@ public class UserPanel extends JPanel {
     private class JoinButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            sessionManager.loadGame((int) gameList.getSelectedValue().charAt(0));
+            sessionManager.loadGame(gameList.getSelectedValue().charAt(0));
+            sessionManager.toChess();
         }
     }
     private class CreateGameButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             sessionManager.createGame();
+            sessionManager.toChess();
         }
     }
 }
