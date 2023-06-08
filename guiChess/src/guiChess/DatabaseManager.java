@@ -27,7 +27,7 @@ public class DatabaseManager {
     private static final Logger log = Logger.getLogger(DatabaseManager.class.getName());
     // READ ME. before you change the DB URL, have you ensured local permissions and state?
     // remember. netbeans will happily mangle permissions without warning...
-    private static final String DB_URL = "jdbc:derby:Chess_v2;create=true";
+    private static final String DB_URL = "jdbc:derby:Chess_v3;create=true";
     private static final String USERS_TABLE = "USERS", GAMES_TABLE = "GAMES", MOVES_TABLE = "MOVES";
     private Connection connection;
 
@@ -282,8 +282,7 @@ public class DatabaseManager {
 
             // Make sure Player1 exists in the database
             if (!player1Result.next()) {
-                // Player1 doesn't exist, return an error code
-                return 1; // or any other suitable error code
+                log.severe("newGame: " + "GIVEN INVALID PLAYER");
             }
 
             int player1Id = player1Result.getInt("UserID");
@@ -296,8 +295,14 @@ public class DatabaseManager {
             insert.setBoolean(2, false);
             insert.setBoolean(3, false);
             insert.executeUpdate();
+            // get the gameID of the new game
+            PreparedStatement getGameID = connection.prepareStatement(
+                    "SELECT GameID FROM " + GAMES_TABLE + " WHERE Player1 = ?"
+            );
+            getGameID.setInt(1, player1Id);
+            ResultSet gameIDResult = getGameID.executeQuery();
 
-            return 0;
+            return gameIDResult.getInt("GameID");
         } catch (SQLException ex) {
             log.severe("newGame: " + ex.getMessage());
             return 3; // or any other suitable error code
@@ -323,8 +328,14 @@ public class DatabaseManager {
             statement.setInt(1, gameID);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Position from = new Position(resultSet.getString("FromSquare"));
-                Position to = new Position(resultSet.getString("ToSquare"));
+                String froms = resultSet.getString("FromSquare");
+                int f1 = Character.getNumericValue(froms.charAt(0));
+                int f2 = Character.getNumericValue(froms.charAt(1));
+                String tos = resultSet.getString("ToSquare");
+                int t1 = Character.getNumericValue(tos.charAt(0));
+                int t2 = Character.getNumericValue(tos.charAt(1));
+                Position from = new Position(f1, f2);
+                Position to = new Position(f1, f2);
                 Move move = new Move(from, to);
                 moves.add(move);
             }
@@ -351,8 +362,8 @@ public class DatabaseManager {
             );
             for (Move move : moves) {
                 statement.setInt(1, gameID);
-                statement.setString(2, String.valueOf((move.getFrom().getCol() + 'a') + move.getFrom().getRow()));
-                statement.setString(3, String.valueOf((move.getTo().getCol() + 'a') + move.getTo().getRow()));
+                statement.setString(2, String.valueOf((move.getFrom().getCol()) + move.getFrom().getRow()));
+                statement.setString(3, String.valueOf((move.getTo().getCol()) + move.getTo().getRow()));
                 statement.executeUpdate();
             }
         } catch (SQLException ex) {

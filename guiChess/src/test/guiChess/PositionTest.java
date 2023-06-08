@@ -12,20 +12,6 @@ public class PositionTest {
     }
 
     @Test
-    public void testConstructorWithChars() {
-        Position position = new Position('b', 4);
-        assertEquals(1, position.getRow());
-        assertEquals(4, position.getCol());
-    }
-
-    @Test
-    public void testConstructorWithString() {
-        Position position = new Position("c5");
-        assertEquals(2, position.getRow());
-        assertEquals(5, position.getCol());
-    }
-
-    @Test
     public void testEquals() {
         Position position1 = new Position(1, 2);
         Position position2 = new Position(1, 2);

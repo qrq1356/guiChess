@@ -18,6 +18,7 @@ public class SessionManager {
     private final DatabaseManager dbm = new DatabaseManager();
     private final GameEngine gameEngine = new GameEngine();
     private final MainFrame mainFrame;
+    private int gameID;
     private String currentUser;
 
     public SessionManager() {
@@ -34,13 +35,18 @@ public class SessionManager {
 
     // game management
     public void createGame() {
-        dbm.newGame(currentUser);
+        gameID = dbm.newGame(currentUser);
+
     }
 
     public void loadGame(int id) {
         gameEngine.playGameFromList(dbm.movesForGame(id));
+        gameID = id;
     }
 
+    public void saveGame() {
+        dbm.writeMovesForGame(gameID, gameEngine.getMoves());
+    }
     // user management
     public int createUser(String name) {
         return dbm.addUser(name);

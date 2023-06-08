@@ -28,7 +28,7 @@ public class MainFrame extends JFrame {
     }
 
     public void showChess() {
-        cards.add(new ChessPanel(sessionManager.getGameEngine()), "chessPanel");
+        cards.add(new ChessPanel(sessionManager), "chessPanel");
         cl.show(cards, "chessPanel");
     }
 

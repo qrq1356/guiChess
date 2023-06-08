@@ -94,4 +94,8 @@ public class GameEngine {
     public Piece getPieceAt(Position pos) {
         return board.getPieceAt(pos);
     }
+
+    public List<Move> getMoves() {
+        return moves;
+    }
 }
