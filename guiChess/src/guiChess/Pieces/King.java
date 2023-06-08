@@ -1,4 +1,5 @@
 package guiChess.Pieces;
+
 import guiChess.Player;
 import guiChess.Board;
 import guiChess.Move;
@@ -11,6 +12,7 @@ public class King extends Piece {
     public King(Player owner, Board board) {
         super(owner, board);
     }
+
     public List<Move> getLegalMoves() {
         List<Move> legalMoves = new ArrayList<>();
         Position pos = board.findPiece(this);

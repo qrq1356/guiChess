@@ -1,4 +1,5 @@
 package guiChess.Pieces;
+
 import guiChess.Player;
 import guiChess.Board;
 import guiChess.Move;
@@ -12,6 +13,7 @@ public class Pawn extends Piece {
     public Pawn(Player owner, Board board) {
         super(owner, board);
     }
+
     public List<Move> getLegalMoves() {
         List<Move> legalMoves = new ArrayList<>();
         Position pos = board.findPiece(this);
@@ -27,7 +29,7 @@ public class Pawn extends Piece {
             legalMoves.add(new Move(pos, forwardTwice));
         }
 
-        int[] captureCols = { pos.getCol() - 1, pos.getCol() + 1 };
+        int[] captureCols = {pos.getCol() - 1, pos.getCol() + 1};
         for (int col : captureCols) {
             Position capturePos = new Position(pos.getRow() + owner.getDirection(), col);
             if (board.isPositionValid(capturePos)) {

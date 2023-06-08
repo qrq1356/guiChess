@@ -3,13 +3,21 @@ package guiChess;
 import java.util.Objects;
 
 public class Move {
-    private Position from, to;
+    private final Position from;
+    private final Position to;
+
     public Move(Position from, Position to) {
         this.from = from;
         this.to = to;
     }
-    public Position getFrom() { return from; };
-    public Position getTo() { return to; };
+
+    public Position getFrom() {
+        return from;
+    }
+
+    public Position getTo() {
+        return to;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -27,6 +35,7 @@ public class Move {
     public int hashCode() {
         return Objects.hash(from, to);
     }
+
     @Override
     public String toString() {
         return "Move{" + "from=" + from + ", to=" + to + '}';

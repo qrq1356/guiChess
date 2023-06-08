@@ -1,6 +1,7 @@
 package guiChess.UI;
 
 import guiChess.SessionManager;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -8,10 +9,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class UserPanel extends JPanel {
-    private static final Color BACKGROUND_COLOR = new Color(240,240,240),
-            FOREGROUND_COLOR = new Color(0,43,54),
-            BACKGROUND_COLOR_2 = new Color(230,230,230),
-            PRIMARY_COLOR = new Color(108,113,196);
+    private static final Color BACKGROUND_COLOR = new Color(240, 240, 240),
+            FOREGROUND_COLOR = new Color(0, 43, 54),
+            BACKGROUND_COLOR_2 = new Color(230, 230, 230),
+            PRIMARY_COLOR = new Color(108, 113, 196);
 
     private static final Font HEADER_FONT = new Font("Arial", Font.BOLD, 24),
             LABEL_FONT = new Font("Arial", Font.PLAIN, 16),
@@ -26,6 +27,7 @@ public class UserPanel extends JPanel {
         this.sessionManager = sessionManager;
         initializeUI();
     }
+
     private void initializeUI() {
         setBackground(BACKGROUND_COLOR);
         setForeground(FOREGROUND_COLOR);
@@ -63,6 +65,7 @@ public class UserPanel extends JPanel {
         c.gridx = 2;
         add(rightSpacePanel, c);
     }
+
     private void constructHeaderPanel(JPanel headerPanel) {
         JLabel headerLabel = new JLabel("Join an existing or create a new game");
         headerPanel.setLayout(new GridBagLayout());
@@ -73,12 +76,13 @@ public class UserPanel extends JPanel {
         headerLabel.setForeground(FOREGROUND_COLOR);
         headerPanel.add(headerLabel, c);
     }
+
     private void constructSelectPanel(JPanel selectPanel) {
         selectPanel.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
         // game list
-        c.insets = new Insets(10,10,10,10);
+        c.insets = new Insets(10, 10, 10, 10);
         gameList = new JList<>(sessionManager.getGameNames());
         gameList.setFont(LABEL_FONT);
         gameList.setSelectionBackground(PRIMARY_COLOR);
@@ -90,7 +94,7 @@ public class UserPanel extends JPanel {
         c.weightx = 1;
         c.gridheight = 3;
         selectPanel.add(new JScrollPane(gameList), c);
-        c.insets = new Insets(0,0,0,0);
+        c.insets = new Insets(0, 0, 0, 0);
 
         // join button
         JButton joinButton = new JButton("Join");
@@ -123,6 +127,7 @@ public class UserPanel extends JPanel {
             sessionManager.toChess();
         }
     }
+
     private class CreateGameButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {

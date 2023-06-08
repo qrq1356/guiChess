@@ -1,6 +1,7 @@
 package guiChess.UI;
 
 import javax.swing.*;
+
 import guiChess.GameEngine;
 import guiChess.Move;
 import guiChess.Pieces.Piece;
@@ -12,19 +13,21 @@ import java.awt.*;
 public class ChessPanel extends JPanel implements GameObserver {
     private GameEngine gameEngine;
     private JButton[][] buttons;
-    private Position selectedPositon;
+    private Position selectedPosition;
+
     public ChessPanel(GameEngine gameEngine) {
         this.gameEngine = gameEngine;
         gameEngine.registerObserver(this);
-        initalizeUI(gameEngine);
+        initializeUI(gameEngine);
     }
-    private void initalizeUI(GameEngine gameEngine) {
-        setBackground(new Color(238,232,213));
+
+    private void initializeUI(GameEngine gameEngine) {
+        setBackground(new Color(238, 232, 213));
         // layout
         setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints(0,0,1,1,0.5,1,
+        GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 0.5, 1,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets(20,20,20,20), 0, 0);
+                new Insets(20, 20, 20, 20), 0, 0);
         Border softBevel = BorderFactory.createSoftBevelBorder(0);
         // board panel
         JPanel boardPanel = new JPanel();
@@ -39,19 +42,20 @@ public class ChessPanel extends JPanel implements GameObserver {
         add(infoPanel, c);
 
     }
+
     private void initButtons(JPanel parent, GameEngine gameEngine) {
         // layout
         parent.setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints(0,0,1,1,0.6,1,
+        GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 0.6, 1,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets(0,0,0,0), 0, 0);
+                new Insets(0, 0, 0, 0), 0, 0);
         buttons = new JButton[8][8];
         for (int i = 7; i >= 0; i--) {  // start from 7
             for (int j = 0; j < 8; j++) {
                 c.gridx = j;
                 c.gridy = 7 - i;
                 JButton button = new JButton();
-                button.setPreferredSize(new Dimension(50,50));
+                button.setPreferredSize(new Dimension(50, 50));
                 buttons[i][j] = button;
                 button.setBackground(Color.WHITE);
                 button.setForeground(Color.pink);
@@ -92,17 +96,18 @@ public class ChessPanel extends JPanel implements GameObserver {
         this.gameEngine = gameEngine;
         updateButtons(gameEngine);
     }
+
     public void onPiecePress(Position pos) {
-        if(selectedPositon == null) {
-            selectedPositon = pos;
+        if (selectedPosition == null) {
+            selectedPosition = pos;
             buttons[pos.getCol()][pos.getRow()].setBackground(Color.RED);
         } else {
-            buttons[selectedPositon.getCol()][selectedPositon.getRow()].setBackground(Color.WHITE);
+            buttons[selectedPosition.getCol()][selectedPosition.getRow()].setBackground(Color.WHITE);
             //print selected position and pos row and col values for debug
-            System.out.print("pos1: " + selectedPositon.getRow() + ":" + selectedPositon.getCol());
+            System.out.print("pos1: " + selectedPosition.getRow() + ":" + selectedPosition.getCol());
             System.out.println(" - pos2: " + pos.getRow() + ":" + pos.getCol());
-            gameEngine.playMove(new Move(new Position(selectedPositon.getCol(), selectedPositon.getRow()), new Position(pos.getCol(), pos.getRow())));
-            selectedPositon = null;
+            gameEngine.playMove(new Move(new Position(selectedPosition.getCol(), selectedPosition.getRow()), new Position(pos.getCol(), pos.getRow())));
+            selectedPosition = null;
             gameEngine.botMove();
         }
     }

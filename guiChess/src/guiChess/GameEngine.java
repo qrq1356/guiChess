@@ -1,24 +1,28 @@
 package guiChess;
+
 import guiChess.Pieces.Piece;
 import guiChess.UI.GameObserver;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameEngine {
-    private List<GameObserver> observers = new ArrayList<>();
-    private Board board;
+    private final List<GameObserver> observers = new ArrayList<>();
+    private final Board board;
     private Player up, down, current;
-    private List<Move> moves;
+    private final List<Move> moves;
 
     public GameEngine() {
         board = new Board();
         moves = new ArrayList<>();
     }
+
     public void initUp(Player given) {
         this.up = given;
         current = up;
         board.addStartingPieces(up);
     }
+
     public void initDown(Player given) {
         this.down = given;
         board.addStartingPieces(down);
@@ -27,19 +31,23 @@ public class GameEngine {
     public void registerObserver(GameObserver observer) {
         observers.add(observer);
     }
+
     public void unregisterObserver(GameObserver observer) {
         observers.remove(observer);
     }
+
     public void notifyObservers() {
         for (GameObserver observer : observers) {
             observer.onGameStateChange(this);
         }
     }
+
     public void botMove() {
         List<Move> validMoves = board.getValidMoves(current);
         Move move = validMoves.get((int) (Math.random() * validMoves.size()));
         playMove(move);
     }
+
     public void playMove(Move move) {
         playMove(current, move);
     }
@@ -82,6 +90,7 @@ public class GameEngine {
             makeMove(move);
         }
     }
+
     public Piece getPieceAt(Position pos) {
         return board.getPieceAt(pos);
     }

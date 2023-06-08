@@ -1,6 +1,7 @@
 package guiChess.UI;
 
 import guiChess.SessionManager;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -8,11 +9,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class LoginPanel extends JPanel {
-    private static final Color BACKGROUND_COLOR = new Color(240,240,240),
-            FOREGROUND_COLOR = new Color(0,43,54),
-            BACKGROUND_COLOR_2 = new Color(230,230,230),
-            PRIMARY_COLOR = new Color(108,113,196),
-            ERROR_COLOR = new Color(220,50,47);
+    private static final Color BACKGROUND_COLOR = new Color(240, 240, 240),
+            FOREGROUND_COLOR = new Color(0, 43, 54),
+            BACKGROUND_COLOR_2 = new Color(230, 230, 230),
+            PRIMARY_COLOR = new Color(108, 113, 196),
+            ERROR_COLOR = new Color(220, 50, 47);
 
     private static final Font HEADER_FONT = new Font("Arial", Font.BOLD, 24),
             LABEL_FONT = new Font("Arial", Font.PLAIN, 16),
@@ -33,9 +34,9 @@ public class LoginPanel extends JPanel {
     private void initializeUI() {
         // layout
         setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints(1,0,1,1,0.1,0.1,
+        GridBagConstraints c = new GridBagConstraints(1, 0, 1, 1, 0.1, 0.1,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets(5,0,5,0),0,0);
+                new Insets(5, 0, 5, 0), 0, 0);
         // colours
         setBackground(BACKGROUND_COLOR);
         setForeground(FOREGROUND_COLOR);
@@ -92,7 +93,7 @@ public class LoginPanel extends JPanel {
         owner.setBackground(BACKGROUND_COLOR);
         owner.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        c.insets = new Insets(0,4,0,4);
+        c.insets = new Insets(0, 4, 0, 4);
 
         // header label
         JLabel createLabel = new JLabel("Create a user");
@@ -177,7 +178,7 @@ public class LoginPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             int i = sessionManager.createUser(createNameField.getText());
-            switch(i) {
+            switch (i) {
                 case 0:
                     System.out.println(createNameField.getText());
                     sessionManager.loadUser(createNameField.getText());
