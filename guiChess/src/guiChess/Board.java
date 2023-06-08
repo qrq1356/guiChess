@@ -31,9 +31,6 @@ public class Board {
     public Piece getPieceAt(Position pos) {
         return board[pos.getRow()][pos.getCol()];
     }
-    public Piece getPieceAt(int r, int c) {
-        return board[r][c];
-    }
     public void placePieceAt(Position pos, Piece piece) {
         board[pos.getRow()][pos.getCol()] = piece;
     }
@@ -47,6 +44,23 @@ public class Board {
         }
         return null;
     }
+    public boolean canMoveToPosition(Position from, Position to, Player owner, boolean jump) {
+        // stack checks so we avoid what we can
+        if (isPositionValid(to)) {
+            if (!matchingOwner(to, owner)) {
+                if (jump) { // no need to check path if we're jumping
+                    return wontCheckAfterMove(owner, new Move(from, to));
+                } else if (isPathFree(from, to)) {
+                    return wontCheckAfterMove(owner, new Move(from, to));
+                }
+            }
+        }
+        return false;
+    }
+    private boolean isPositionValid(Position pos) {
+        return pos.getRow() >= 0 && pos.getRow() < NUM_ROWS && pos.getCol() >= 0 && pos.getCol() < NUM_COLS;
+    }
+
     public boolean matchingOwner(Position pos, Player owner) {
         if (board[pos.getRow()][pos.getCol()] == null) {
             return false;
@@ -71,7 +85,6 @@ public class Board {
         }
         return true;
     }
-
     public List<Move> getValidMoves(Player player) {
         List<Move> validMoves = new ArrayList<>();
         for (int r = 0; r < NUM_ROWS; r++) {
@@ -84,7 +97,7 @@ public class Board {
         }
         return validMoves;
     }
-    public boolean willBeInCheck(Player player, Move move) {
+    public boolean wontCheckAfterMove(Player player, Move move) {
         // make the move
         Piece piece = board[move.getFrom().getRow()][move.getFrom().getCol()];
         board[move.getFrom().getRow()][move.getFrom().getCol()] = null;
@@ -95,7 +108,7 @@ public class Board {
         // undo the move
         board[move.getFrom().getRow()][move.getFrom().getCol()] = piece;
         board[move.getTo().getRow()][move.getTo().getCol()] = null;
-        return inCheck;
+        return !inCheck;
     }
     public boolean isInCheck(Player player, Position kingPos) {
         // check if any of the opponent's pieces can attack the king

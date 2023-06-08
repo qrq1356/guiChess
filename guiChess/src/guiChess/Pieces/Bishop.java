@@ -20,10 +20,8 @@ public class Bishop extends Piece {
             int col = pos.getCol();
             while (row >= 0 && row < Board.NUM_ROWS && col >= 0 && col < Board.NUM_COLS) {
                 if (row != pos.getRow() || col != pos.getCol()) {
-                    if (!board.matchingOwner(new Position(row, col), owner)) {
-                        if (board.isPathFree(pos, new Position(row, col))) {
-                            legalMoves.add(new Move(pos, new Position(row, col)));
-                        }
+                    if (board.canMoveToPosition(pos, new Position(row, col), owner, false)) {
+                        legalMoves.add(new Move(pos, new Position(row, col)));
                     }
                 }
                 row += dir[0];

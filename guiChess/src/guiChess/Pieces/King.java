@@ -20,11 +20,8 @@ public class King extends Piece {
         for (int i = 0; i < rowOffsets.length; i++) {
             int row = pos.getRow() + rowOffsets[i];
             int col = pos.getCol() + colOffsets[i];
-            if (row >= 0 && row < Board.NUM_ROWS && col >= 0 && col < Board.NUM_COLS) {
-                if (!board.matchingOwner(new Position(row, col), owner)) {
-                    // don't need to check for obstructed paths as the king is unable to move more than one position at a time
-                    legalMoves.add(new Move(pos, new Position(row, col)));
-                }
+            if (board.canMoveToPosition(pos, new Position(row, col), owner, false)) {
+                legalMoves.add(new Move(pos, new Position(row, col)));
             }
         }
         return legalMoves;

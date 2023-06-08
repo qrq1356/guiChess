@@ -21,8 +21,9 @@ public class Knight extends Piece {
         for (int[] move : moves) {
             int newRow = pos.getRow() + move[0];
             int newCol = pos.getCol() + move[1];
+            // ensure the new position is on the board
             if (newRow >= 0 && newRow < Board.NUM_ROWS && newCol >= 0 && newCol < Board.NUM_COLS) {
-                if(!board.matchingOwner(new Position(newRow, newCol), owner)) {
+                if(board.canMoveToPosition(pos, new Position(newRow, newCol), owner, true)) {
                     legalMoves.add(new Move(pos, new Position(newRow, newCol)));
                 }
             }
