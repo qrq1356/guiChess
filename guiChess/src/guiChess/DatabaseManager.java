@@ -424,8 +424,7 @@ public class DatabaseManager {
                 statement.setInt(1, player1Id);
                 ResultSet resultSet = statement.executeQuery();
                 while (resultSet.next()) {
-                    games.add(resultSet.getString("GameID"));
-                    games.add(resultSet.getString("Status"));
+                    games.add(resultSet.getString("GameID") + ", complete: " + resultSet.getString("Status"));
                 }
             }
         } catch (SQLException ex) {

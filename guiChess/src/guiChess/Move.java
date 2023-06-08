@@ -12,10 +12,14 @@ public class Move {
     public Position getTo() { return to; };
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Move move = (Move) o;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Move move = (Move) obj;
         return Objects.equals(from, move.from) && Objects.equals(to, move.to);
     }
 
@@ -23,4 +27,9 @@ public class Move {
     public int hashCode() {
         return Objects.hash(from, to);
     }
+    @Override
+    public String toString() {
+        return "Move{" + "from=" + from + ", to=" + to + '}';
+    }
+
 }

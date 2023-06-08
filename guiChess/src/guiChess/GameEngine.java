@@ -47,12 +47,24 @@ public class GameEngine {
     public void playMove(Player player, Move move) {
         // check if the move is valid
         List<Move> validMoves = board.getValidMoves(player);
-        System.out.println(player.name + "Moves: "+ validMoves.size());
-        if (validMoves.contains(move) && board.wontCheckAfterMove(player, move))
+        System.out.println("Valid moves:");
+        for (Move m : validMoves) {
+            System.out.println(m);
+        }
+        if (!validMoves.contains(move)) {
+            System.out.println("Move not in validMoves list: " + move);
+        }
+        if (!board.wontCheckAfterMove(player, move)) {
+            System.out.println("Move results in check: " + move);
+        }
+        if (validMoves.contains(move) && board.wontCheckAfterMove(player, move)) {
             makeMove(move);
-        else
-            System.out.println("Invalid move");
+        } else {
+            System.out.println("Invalid move: " + move);
+        }
     }
+
+
     public void makeMove(Move move) {
         // move the piece
         Piece piece = board.getPieceAt(move.getFrom());

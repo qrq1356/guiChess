@@ -19,11 +19,12 @@ public class ChessPanel extends JPanel implements GameObserver {
         initalizeUI(gameEngine);
     }
     private void initalizeUI(GameEngine gameEngine) {
+        setBackground(new Color(238,232,213));
         // layout
         setLayout(new GridBagLayout());
-        GridBagConstraints c = new GridBagConstraints(0,0,1,1,0.8,1,
+        GridBagConstraints c = new GridBagConstraints(0,0,1,1,0.5,1,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-                new Insets(10,0,10,0), 0, 0);
+                new Insets(20,20,20,20), 0, 0);
         Border softBevel = BorderFactory.createSoftBevelBorder(0);
         // board panel
         JPanel boardPanel = new JPanel();
@@ -39,10 +40,16 @@ public class ChessPanel extends JPanel implements GameObserver {
 
     }
     private void initButtons(JPanel parent, GameEngine gameEngine) {
-        parent.setLayout(new GridLayout(8,8));
+        // layout
+        parent.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints(0,0,1,1,0.6,1,
+                GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+                new Insets(0,0,0,0), 0, 0);
         buttons = new JButton[8][8];
         for (int i = 7; i >= 0; i--) {  // start from 7
             for (int j = 0; j < 8; j++) {
+                c.gridx = j;
+                c.gridy = 7 - i;
                 JButton button = new JButton();
                 button.setPreferredSize(new Dimension(50,50));
                 buttons[i][j] = button;
@@ -50,7 +57,7 @@ public class ChessPanel extends JPanel implements GameObserver {
                 button.setForeground(Color.pink);
                 Position pos = new Position(j, i);
                 button.addActionListener(e -> onPiecePress(pos));
-                parent.add(buttons[i][j]);
+                parent.add(button, c);
             }
         }
         updateButtons(gameEngine);
@@ -94,9 +101,10 @@ public class ChessPanel extends JPanel implements GameObserver {
             //print selected position and pos row and col values for debug
             System.out.print("pos1: " + selectedPositon.getRow() + ":" + selectedPositon.getCol());
             System.out.println(" - pos2: " + pos.getRow() + ":" + pos.getCol());
-            gameEngine.playMove(new Move(selectedPositon, pos));
+            gameEngine.playMove(new Move(new Position(selectedPositon.getCol(), selectedPositon.getRow()), new Position(pos.getCol(), pos.getRow())));
             selectedPositon = null;
             gameEngine.botMove();
         }
     }
+
 }

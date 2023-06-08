@@ -12,15 +12,15 @@ import javax.swing.DefaultListModel;
  */
 public class SessionManager {
     private static final Logger log = Logger.getLogger(SessionManager.class.getName());
-    private DatabaseManager dbm = new DatabaseManager();
-    private GameEngine gameEngine = new GameEngine();
-    private MainFrame mainFrame;
+    private final DatabaseManager dbm = new DatabaseManager();
+    private final GameEngine gameEngine = new GameEngine();
+    private final MainFrame mainFrame;
     private String currentUser;
     public SessionManager() {
         // init database
         dbm.connect();
         dbm.createTables();
-        log.info("Database connected, tables initalized");
+        log.info("Database connected, tables initialized");
         // start the UI
         this.mainFrame = new MainFrame(this);
         mainFrame.setVisible(true);
@@ -30,9 +30,7 @@ public class SessionManager {
 
     // game management
     public void createGame() {
-        System.out.println("reached: " + currentUser + gameEngine.toString());
         dbm.newGame(currentUser);
-
     }
     public void loadGame(int id) {
         gameEngine.playGameFromList(dbm.movesForGame(id));

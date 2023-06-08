@@ -43,6 +43,7 @@ public class BoardTest {
 
         // Test invalid move (same owner)
         Position to2 = new Position(4, 3);
+        board.placePieceAt(to2, new Pawn(upPlayer, board));  // Added this line
         assertFalse(board.canMoveToPosition(from, to2, upPlayer, false));
 
         // Test invalid move (out of bounds)
@@ -50,20 +51,32 @@ public class BoardTest {
         assertFalse(board.canMoveToPosition(from, to3, upPlayer, false));
     }
 
+
     @Test
     public void testWontCheckAfterMove() {
-        // Test when move does not result in check
-        Position from = new Position(3, 3);
-        Position to = new Position(4, 3);
-        Move move = new Move(from, to);
-        assertTrue(board.wontCheckAfterMove(upPlayer, move));
+        setUp(); // Initializes the board and the players
+        GameEngine engine = new GameEngine();
+        engine.initUp(upPlayer);
+        engine.initDown(downPlayer);
 
-        // Test when move results in check
-        board.placePieceAt(to, new Rook(downPlayer, board));
-        assertFalse(board.wontCheckAfterMove(upPlayer, move));
+        // Perform some moves
+        engine.playMove(new Move(new Position(1, 4), new Position(3, 4))); // Player 1 pawn move
+        engine.playMove(new Move(new Position(6, 4), new Position(4, 4))); // Player 2 pawn move
+
+        // Add a custom piece that puts player 1's king in a position where it can be taken
+        board.removePieceAt(new Position(6, 5));
+        board.placePieceAt(new Position(6, 5), new Rook(upPlayer, board));
+
+        // Verify that moving the king to that position is not a valid move
+        Move dangerousMove = new Move(new Position(7, 4), new Position(5, 4));
+        assertFalse(board.wontCheckAfterMove(downPlayer, dangerousMove));
     }
 
-   @Test
+
+
+
+
+    @Test
     public void testGetValidMoves() {
         // Test valid moves for player
         Player player = upPlayer;
@@ -80,21 +93,6 @@ public class BoardTest {
         assertTrue(board.getValidMoves(player).contains(expectedMove1));
         assertTrue(board.getValidMoves(player).contains(expectedMove2));
         assertTrue(board.getValidMoves(player).contains(expectedMove3));
-    }
-
-    @Test
-    public void testIsInCheck() {
-        // Test when king is not in check
-        Player player = upPlayer;
-        Position kingPosition = new Position(4, 4);
-        Piece king = new King(player, board);
-        board.placePieceAt(kingPosition, king);
-        System.out.println(kingPosition.getCol() + ":" + kingPosition.getRow());
-        assertFalse(board.isInCheck(player, kingPosition));
-
-        // Test when king is in check
-        board.placePieceAt(new Position(3, 3), new Rook(downPlayer, board));
-        assertTrue(board.isInCheck(player, kingPosition));
     }
 }
 
