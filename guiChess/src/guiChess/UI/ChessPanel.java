@@ -41,11 +41,13 @@ public class ChessPanel extends JPanel implements GameObserver {
     private void initButtons(JPanel parent, GameEngine gameEngine) {
         parent.setLayout(new GridLayout(8,8));
         buttons = new JButton[8][8];
-        for (int i = 0; i < 8; i++) {
+        for (int i = 7; i >= 0; i--) {  // start from 7
             for (int j = 0; j < 8; j++) {
                 JButton button = new JButton();
                 button.setPreferredSize(new Dimension(50,50));
                 buttons[i][j] = button;
+                button.setBackground(Color.WHITE);
+                button.setForeground(Color.pink);
                 Position pos = new Position(j, i);
                 button.addActionListener(e -> onPiecePress(pos));
                 parent.add(buttons[i][j]);
@@ -53,18 +55,30 @@ public class ChessPanel extends JPanel implements GameObserver {
         }
         updateButtons(gameEngine);
     }
+
     public void updateButtons(GameEngine gameEngine) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j <8; j++) {
+        for (int i = 7; i >= 0; i--) {  // start from 7
+            for (int j = 0; j < 8; j++) {
                 Piece piece = gameEngine.getPieceAt(new Position(i, j));
                 if (piece != null) {
-                    buttons[i][j].setText(piece.toString());
+                    String inp = piece.toString();
+                    int firstDotIndex = inp.indexOf('.');
+                    int secondDotIndex = inp.indexOf('.', firstDotIndex + 1);
+                    int atIndex = inp.indexOf('@');
+                    if (piece.getOwner().getDirection() == 1) {
+                        buttons[i][j].setForeground(Color.cyan);
+                    } else {
+                        buttons[i][j].setForeground(Color.pink);
+                    }
+                    String result = inp.substring(secondDotIndex + 1, atIndex);
+                    buttons[i][j].setText(result);
                 } else {
                     buttons[i][j].setText("");
                 }
             }
         }
     }
+
 
     @Override
     public void onGameStateChange(GameEngine gameEngine) {
@@ -78,8 +92,8 @@ public class ChessPanel extends JPanel implements GameObserver {
         } else {
             buttons[selectedPositon.getCol()][selectedPositon.getRow()].setBackground(Color.WHITE);
             //print selected position and pos row and col values for debug
-            System.out.println("selected position: " + selectedPositon.getRow() + " " + selectedPositon.getCol());
-            System.out.println("pos: " + pos.getRow() + " " + pos.getCol());
+            System.out.print("pos1: " + selectedPositon.getRow() + ":" + selectedPositon.getCol());
+            System.out.println(" - pos2: " + pos.getRow() + ":" + pos.getCol());
             gameEngine.playMove(new Move(selectedPositon, pos));
             selectedPositon = null;
             gameEngine.botMove();

@@ -36,11 +36,9 @@ public class GameEngine {
         }
     }
     public void botMove() {
-        // get a random valid move for the bot
         List<Move> validMoves = board.getValidMoves(current);
         Move move = validMoves.get((int) (Math.random() * validMoves.size()));
-        // make the move
-        makeMove(move);
+        playMove(move);
     }
     public void playMove(Move move) {
         playMove(current, move);
@@ -49,14 +47,12 @@ public class GameEngine {
     public void playMove(Player player, Move move) {
         // check if the move is valid
         List<Move> validMoves = board.getValidMoves(player);
-        for (Move m : validMoves) {
-            // if move is in validMoves, make the move
-            if (m.equals(move) && board.wontCheckAfterMove(player, move)) {
-                makeMove(move);
-            }
-        }
+        System.out.println(player.name + "Moves: "+ validMoves.size());
+        if (validMoves.contains(move) && board.wontCheckAfterMove(player, move))
+            makeMove(move);
+        else
+            System.out.println("Invalid move");
     }
-
     public void makeMove(Move move) {
         // move the piece
         Piece piece = board.getPieceAt(move.getFrom());
@@ -68,6 +64,7 @@ public class GameEngine {
         current = (current == up) ? down : up;
         notifyObservers();
     }
+
     public void playGameFromList(List<Move> moves) {
         for (Move move : moves) {
             makeMove(move);

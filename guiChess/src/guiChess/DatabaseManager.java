@@ -242,9 +242,9 @@ public class DatabaseManager {
     }
 
     /**
-     * if a user with the given username exists.
+     * Checks if a user with the given username exists.
      *
-     * @param username the username to check
+     * @param username the username of the user to check
      * @return true if a user with the given username exists, false otherwise
      */
     private boolean userExists(String username) {

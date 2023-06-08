@@ -15,29 +15,31 @@ public class Pawn extends Piece {
     public List<Move> getLegalMoves() {
         List<Move> legalMoves = new ArrayList<>();
         Position pos = board.findPiece(this);
-        // check moving forward once
-        Position once = new Position(pos.getRow()+owner.getDirection(), pos.getCol());
-        if(board.getPieceAt(once) == null) {
-            legalMoves.add(new Move(pos, once));
+
+        Position forwardOnce = new Position(pos.getRow() + owner.getDirection(), pos.getCol());
+        if (board.isPositionValid(forwardOnce) && board.getPieceAt(forwardOnce) == null) {
+            legalMoves.add(new Move(pos, forwardOnce));
         }
-        // check capturing diagonally
-        int[] captureCols = { pos.getCol() + 1, pos.getCol() - 1 };
-        for (int targetCol : captureCols) {
-            Position target = new Position(pos.getRow() + owner.getDirection(), targetCol);
-            Piece targetPiece = board.getPieceAt(target);
-            if (targetPiece != null && targetPiece.getOwner() != owner) {
-                legalMoves.add(new Move(pos, target));
-            }
+
+        Position forwardTwice = new Position(pos.getRow() + (2 * owner.getDirection()), pos.getCol());
+        if (pos.getRow() == owner.getPawnRow() && board.isPositionValid(forwardTwice)
+                && board.getPieceAt(forwardTwice) == null && board.isPathFree(pos, forwardTwice)) {
+            legalMoves.add(new Move(pos, forwardTwice));
         }
-        // check two positions forward
-        if (pos.getRow() == owner.getPawnRow()) {
-            Position target = new Position(pos.getRow() + (2 * owner.getDirection()), pos.getCol());
-            if (board.isPathFree(pos, new Position(pos.getRow() + (2 * owner.getDirection()), pos.getCol()))) {
-                if (board.getPieceAt(target) == null) {
-                    legalMoves.add(new Move(pos, target));
+
+        int[] captureCols = { pos.getCol() - 1, pos.getCol() + 1 };
+        for (int col : captureCols) {
+            Position capturePos = new Position(pos.getRow() + owner.getDirection(), col);
+            if (board.isPositionValid(capturePos)) {
+                Piece piece = board.getPieceAt(capturePos);
+                if (piece != null && piece.getOwner() != owner) {
+                    legalMoves.add(new Move(pos, capturePos));
                 }
             }
         }
+
         return legalMoves;
     }
+
+
 }
