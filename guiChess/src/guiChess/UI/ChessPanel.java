@@ -114,17 +114,6 @@ public class ChessPanel extends JPanel implements GameObserver {
         saveButton.setBackground(BACKGROUND_COLOR);
         saveButton.addActionListener(e -> onSaveButtonPress());
         buttonPanel.add(saveButton, c3);
-
-        // close button
-        JButton closeButton = new JButton("Close");
-        closeButton.setFont(BUTTON_FONT);
-        closeButton.setForeground(FOREGROUND_COLOR);
-        closeButton.setBackground(BACKGROUND_COLOR);
-        //closeButton.addActionListener(e -> onCloseButtonPress());
-        c3.gridy = 1;
-        buttonPanel.add(closeButton, c3);
-        c.gridy = 2;
-        owner.add(buttonPanel, c);
     }
 
     private void onSaveButtonPress() {

@@ -34,7 +34,7 @@ public class Position {
 
     @Override
     public String toString() {
-        return "Position{" + "row=" + row + ", col=" + col + '}';
+        return row+","+col;
     }
 
 }

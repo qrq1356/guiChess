@@ -14,15 +14,16 @@ A proof-of-concept chess game written with Java8 using Swing, Awt and derbyDB.
 - [x] move validation
     - [x] per piece
     - [x] per player
+    - [x] prevent moving into check
 - [x] check validation
 - [x] graphical user interface
     - [x] user management
     - [x] game management
-    - [ ] game state
-      - [ ] board
-      - [ ] pieces
-      - [ ] move history / indication
-      - [ ] check indication
+    - [x] game state
+      - [x] board
+      - [x] pieces
+      - [x] move history / indication
+      - [x] check indication
 - [x] database
     - [x] user management
     - [x] game management

@@ -38,7 +38,7 @@ public class Move {
 
     @Override
     public String toString() {
-        return "Move{" + "from=" + from + ", to=" + to + '}';
+        return from + "->" + to;
     }
 
 }
