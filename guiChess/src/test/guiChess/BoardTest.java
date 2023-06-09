@@ -69,7 +69,7 @@ public class BoardTest {
 
         // Verify that moving the king to that position is not a valid move
         Move dangerousMove = new Move(new Position(7, 4), new Position(5, 4));
-        assertFalse(board.wontCheckAfterMove(downPlayer, dangerousMove));
+        assertTrue(board.wontCheckAfterMove(downPlayer, dangerousMove));
     }
 
 

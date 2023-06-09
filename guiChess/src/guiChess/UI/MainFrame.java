@@ -18,10 +18,6 @@ public class MainFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public void showLogin() {
-        cl.show(cards, "loginPanel");
-    }
-
     public void showUser() {
         cards.add(new UserPanel(sessionManager), "userPanel");
         cl.show(cards, "userPanel");

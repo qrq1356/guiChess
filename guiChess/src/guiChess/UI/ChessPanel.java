@@ -23,7 +23,7 @@ public class ChessPanel extends JPanel implements GameObserver {
             BUTTON_FONT = new Font("Arial", Font.BOLD, 16);
     private static final Border SOFT_BEVEL_BORDER = BorderFactory.createSoftBevelBorder(0);
 
-    private SessionManager sessionManager;
+    private final SessionManager sessionManager;
     // dynamic components need higher scope.
     private GameEngine gameEngine;
     private JButton[][] buttons;
@@ -99,6 +99,7 @@ public class ChessPanel extends JPanel implements GameObserver {
         c2.gridy = 1;
         gameInfoPanel.add(scrollPane, c2);
         // finish
+        c.gridy = 1;
         owner.add(gameInfoPanel, c);
 
         // button panel
@@ -123,7 +124,7 @@ public class ChessPanel extends JPanel implements GameObserver {
         //closeButton.addActionListener(e -> onCloseButtonPress());
         c3.gridy = 1;
         buttonPanel.add(closeButton, c3);
-
+        c.gridy = 2;
         owner.add(buttonPanel, c);
     }
 
@@ -188,12 +189,8 @@ public class ChessPanel extends JPanel implements GameObserver {
             buttons[pos.getCol()][pos.getRow()].setBackground(Color.RED);
         } else {
             buttons[selectedPosition.getCol()][selectedPosition.getRow()].setBackground((selectedPosition.getCol() + selectedPosition.getRow()) % 2 == 0 ? BACKGROUND_COLOR : BACKGROUND_COLOR_2);
-            //print selected position and pos row and col values for debug
-            System.out.print("pos1: " + selectedPosition.getRow() + ":" + selectedPosition.getCol());
-            System.out.println(" - pos2: " + pos.getRow() + ":" + pos.getCol());
-            gameEngine.playMove(new Move(new Position(selectedPosition.getCol(), selectedPosition.getRow()), new Position(pos.getCol(), pos.getRow())));
+            gameEngine.play(new Move(new Position(selectedPosition.getCol(), selectedPosition.getRow()), new Position(pos.getCol(), pos.getRow())));
             selectedPosition = null;
-            gameEngine.botMove();
         }
     }
 

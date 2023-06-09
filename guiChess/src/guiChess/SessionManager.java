@@ -62,14 +62,9 @@ public class SessionManager {
     }
 
     // card movement
-    public void toLogin() {
-        mainFrame.showLogin();
-    }
-
     public void toUser() {
         mainFrame.showUser();
     }
-
     public void toChess() {
         mainFrame.showChess();
     }

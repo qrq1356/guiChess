@@ -329,13 +329,23 @@ public class DatabaseManager {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 String froms = resultSet.getString("FromSquare");
+                if (froms.length() < 2) {
+                    log.severe("movesForGame: 'FromSquare' string length is less than 2 for game: " + gameID);
+                    continue;
+                }
                 int f1 = Character.getNumericValue(froms.charAt(0));
                 int f2 = Character.getNumericValue(froms.charAt(1));
+
                 String tos = resultSet.getString("ToSquare");
+                if (tos.length() < 2) {
+                    log.severe("movesForGame: 'ToSquare' string length is less than 2 for game: " + gameID);
+                    continue;
+                }
                 int t1 = Character.getNumericValue(tos.charAt(0));
                 int t2 = Character.getNumericValue(tos.charAt(1));
+
                 Position from = new Position(f1, f2);
-                Position to = new Position(f1, f2);
+                Position to = new Position(t1, t2);
                 Move move = new Move(from, to);
                 moves.add(move);
             }

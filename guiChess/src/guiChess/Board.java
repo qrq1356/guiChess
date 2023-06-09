@@ -104,12 +104,18 @@ public class Board {
         for (int r = 0; r < NUM_ROWS; r++) {
             for (int c = 0; c < NUM_COLS; c++) {
                 if (matchingOwner(new Position(r, c), player)) {
-                    validMoves.addAll(getPieceAt(r, c).getLegalMoves());
+                    List<Move> potentialMoves = getPieceAt(r, c).getLegalMoves();
+                    for (Move move : potentialMoves) {
+                        if (wontCheckAfterMove(player, move)) {
+                            validMoves.add(move);
+                        }
+                    }
                 }
             }
         }
         return validMoves;
     }
+
 
     public boolean wontCheckAfterMove(Player player, Move move) {
         // Make the move
@@ -119,8 +125,7 @@ public class Board {
         this.placePieceAt(move.getTo(), piece);
 
         // Check if the king is in check
-        Position kingPos = findPiece(new King(player, this));
-        boolean inCheck = isInCheck(player, kingPos);
+        boolean inCheck = isInCheck(player);
 
         // Undo the move
         this.removePieceAt(move.getTo());
@@ -133,10 +138,26 @@ public class Board {
     }
 
 
-    public boolean isInCheck(Player player, Position kingPos) {
+    public boolean isInCheck(Player player) {
+        Position kingPos = null;
+        // Find the position of the player's king
         for (int r = 0; r < NUM_ROWS; r++) {
             for (int c = 0; c < NUM_COLS; c++) {
-                Piece piece = board[r][c];
+                Piece piece = getPieceAt(new Position(r, c));
+                if (piece instanceof King && piece.getOwner().equals(player)) {
+                    kingPos = new Position(r, c);
+                    break;
+                }
+            }
+            if (kingPos != null) {
+                break;
+            }
+        }
+
+        // Check if any of the opponent's pieces can move to the king's position
+        for (int r = 0; r < NUM_ROWS; r++) {
+            for (int c = 0; c < NUM_COLS; c++) {
+                Piece piece = getPieceAt(new Position(r, c));
                 if (piece != null && !piece.getOwner().equals(player)) {
                     List<Move> moves = piece.getLegalMoves();
                     for (Move move : moves) {
@@ -147,6 +168,8 @@ public class Board {
                 }
             }
         }
+
         return false;
     }
+
 }

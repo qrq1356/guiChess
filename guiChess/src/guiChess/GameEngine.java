@@ -19,7 +19,7 @@ public class GameEngine {
 
     public void initUp(Player given) {
         this.up = given;
-        current = up;
+        current = up; // up always starts
         board.addStartingPieces(up);
     }
 
@@ -32,47 +32,43 @@ public class GameEngine {
         observers.add(observer);
     }
 
-    public void unregisterObserver(GameObserver observer) {
-        observers.remove(observer);
-    }
-
     public void notifyObservers() {
         for (GameObserver observer : observers) {
             observer.onGameStateChange(this);
         }
     }
 
+    // selects a random valid move.
     public void botMove() {
         List<Move> validMoves = board.getValidMoves(current);
         Move move = validMoves.get((int) (Math.random() * validMoves.size()));
-        playMove(move);
+        makeMove(move);
     }
 
-    public void playMove(Move move) {
-        playMove(current, move);
+    // cycles a player and bot turn
+    public void play(Move move) {
+        if (isCheckmate(down)) {
+            System.out.println("Checkmate! Up player wins!");
+        }
+        if (isCheckmate(up)) {
+            System.out.println("Checkmate! Down player wins!");
+        }
+        if (playMove(move)) {
+            botMove();
+        }
     }
 
-    public void playMove(Player player, Move move) {
-        // check if the move is valid
-        List<Move> validMoves = board.getValidMoves(player);
-        System.out.println("Valid moves:");
-        for (Move m : validMoves) {
-            System.out.println(m);
-        }
-        if (!validMoves.contains(move)) {
-            System.out.println("Move not in validMoves list: " + move);
-        }
-        if (!board.wontCheckAfterMove(player, move)) {
-            System.out.println("Move results in check: " + move);
-        }
-        if (validMoves.contains(move) && board.wontCheckAfterMove(player, move)) {
+    // to be used with player input
+    public boolean playMove(Move move) {
+        List<Move> validMoves = board.getValidMoves(current);
+        if (validMoves.contains(move) && board.wontCheckAfterMove(current, move)) {
             makeMove(move);
-        } else {
-            System.out.println("Invalid move: " + move);
+            return true;
         }
+        return false;
     }
 
-
+    // to be used with known good input
     public void makeMove(Move move) {
         // move the piece
         Piece piece = board.getPieceAt(move.getFrom());
@@ -91,11 +87,45 @@ public class GameEngine {
         }
     }
 
-    public Piece getPieceAt(Position pos) {
-        return board.getPieceAt(pos);
-    }
-
     public List<Move> getMoves() {
         return moves;
     }
+
+    public Piece getPieceAt(Position pos) {
+        return board.getPieceAt(pos);
+    }
+    public boolean isCheckmate(Player player) {
+        // Check if the player's king is in check
+        if (!board.isInCheck(player)) {
+            return false;
+        }
+
+        // Check if the player has any valid moves that can remove the check
+        List<Move> validMoves = board.getValidMoves(player);
+        for (Move move : validMoves) {
+            // Check if the move can remove the check
+            Piece piece = board.getPieceAt(move.getFrom());
+            Piece capturedPiece = board.getPieceAt(move.getTo());
+
+            // Make the move
+            board.removePieceAt(move.getFrom());
+            board.placePieceAt(move.getTo(), piece);
+
+            boolean isInCheck = board.isInCheck(player);
+
+            // Undo the move
+            board.removePieceAt(move.getTo());
+            board.placePieceAt(move.getFrom(), piece);
+            if (capturedPiece != null) {
+                board.placePieceAt(move.getTo(), capturedPiece);
+            }
+
+            if (!isInCheck) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }

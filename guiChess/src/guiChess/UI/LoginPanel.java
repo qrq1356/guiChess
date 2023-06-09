@@ -88,7 +88,43 @@ public class LoginPanel extends JPanel {
         headerLabel.setForeground(FOREGROUND_COLOR);
         owner.add(headerLabel, c);
     }
+    private void constructSelectPanel(JPanel owner) {
+        owner.setLayout(new GridBagLayout());
+        owner.setBackground(BACKGROUND_COLOR);
+        GridBagConstraints c = new GridBagConstraints();
 
+        // header label
+        JLabel selectLabel = new JLabel("Select a user");
+        selectLabel.setFont(HEADER_FONT);
+        selectLabel.setForeground(FOREGROUND_COLOR);
+        c.gridy = 0;
+        owner.add(selectLabel, c);
+
+        // User list
+        userList = new JList<>(sessionManager.getUserNames());
+        userList.setFont(LABEL_FONT);
+        userList.setSelectionBackground(PRIMARY_COLOR);
+        userList.setSelectionForeground(BACKGROUND_COLOR);
+        userList.setBackground(BACKGROUND_COLOR_2);
+        userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        userList.setLayoutOrientation(JList.VERTICAL);
+        userList.setVisibleRowCount(-1);
+
+        JScrollPane listScroll = new JScrollPane(userList);
+        listScroll.setPreferredSize(new Dimension(200, 200));
+        c.gridy = 1;
+        owner.add(listScroll, c);
+
+        // Login button
+        JButton loginButton = new JButton("Login");
+        loginButton.setFont(BUTTON_FONT);
+        loginButton.setBackground(PRIMARY_COLOR);
+        loginButton.setForeground(BACKGROUND_COLOR);
+
+        c.gridy = 2;
+        loginButton.addActionListener(new LoginButtonListener());
+        owner.add(loginButton, c);
+    }
     private void constructCreatePanel(JPanel owner) {
         owner.setBackground(BACKGROUND_COLOR);
         owner.setLayout(new GridBagLayout());
@@ -136,44 +172,6 @@ public class LoginPanel extends JPanel {
         owner.add(createErrorLabel, c);
     }
 
-    private void constructSelectPanel(JPanel owner) {
-        owner.setLayout(new GridBagLayout());
-        owner.setBackground(BACKGROUND_COLOR);
-        GridBagConstraints c = new GridBagConstraints();
-
-        // header label
-        JLabel selectLabel = new JLabel("Select a user");
-        selectLabel.setFont(HEADER_FONT);
-        selectLabel.setForeground(FOREGROUND_COLOR);
-        c.gridy = 0;
-        owner.add(selectLabel, c);
-
-        // User list
-        userList = new JList<>(sessionManager.getUserNames());
-        userList.setFont(LABEL_FONT);
-        userList.setSelectionBackground(PRIMARY_COLOR);
-        userList.setSelectionForeground(BACKGROUND_COLOR);
-        userList.setBackground(BACKGROUND_COLOR_2);
-        userList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        userList.setLayoutOrientation(JList.VERTICAL);
-        userList.setVisibleRowCount(-1);
-
-        JScrollPane listScroll = new JScrollPane(userList);
-        listScroll.setPreferredSize(new Dimension(200, 200));
-        c.gridy = 1;
-        owner.add(listScroll, c);
-
-        // Login button
-        JButton loginButton = new JButton("Login");
-        loginButton.setFont(BUTTON_FONT);
-        loginButton.setBackground(PRIMARY_COLOR);
-        loginButton.setForeground(BACKGROUND_COLOR);
-
-        c.gridy = 2;
-        loginButton.addActionListener(new LoginButtonListener());
-        owner.add(loginButton, c);
-    }
-
     private class CreateUserButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -196,7 +194,6 @@ public class LoginPanel extends JPanel {
             }
         }
     }
-
     private class LoginButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
