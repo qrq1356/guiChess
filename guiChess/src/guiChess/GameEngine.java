@@ -47,12 +47,6 @@ public class GameEngine {
 
     // cycles a player and bot turn
     public void play(Move move) {
-        if (isCheckmate(down)) {
-            System.out.println("Checkmate! Up player wins!");
-        }
-        if (isCheckmate(up)) {
-            System.out.println("Checkmate! Down player wins!");
-        }
         if (playMove(move)) {
             botMove();
         }
@@ -127,5 +121,49 @@ public class GameEngine {
 
         return true;
     }
+    public boolean isStalemate(Player player) {
+        // Check if the player is not in check
+        if (board.isInCheck(player)) {
+            return false;
+        }
 
+        // Check if the player has any legal moves
+        List<Move> validMoves = board.getValidMoves(player);
+        for (Move move : validMoves) {
+            // Check if the move can remove the check
+            Piece piece = board.getPieceAt(move.getFrom());
+            Piece capturedPiece = board.getPieceAt(move.getTo());
+
+            // Make the move
+            board.removePieceAt(move.getFrom());
+            board.placePieceAt(move.getTo(), piece);
+
+            boolean isInCheck = board.isInCheck(player);
+
+            // Undo the move
+            board.removePieceAt(move.getTo());
+            board.placePieceAt(move.getFrom(), piece);
+            if (capturedPiece != null) {
+                board.placePieceAt(move.getTo(), capturedPiece);
+            }
+
+            if (!isInCheck) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    public String getCurrentPlayerName() {
+        return current.getName();
+    }
+
+    public Player getUp() {
+        return up;
+    }
+    public Player getDown() {
+        return down;
+    }
 }

@@ -2,6 +2,7 @@ package guiChess;
 
 // format transformation.
 
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 // logging
@@ -9,12 +10,7 @@ import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 // database interface
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
 
 /**
  * This class manages interacting with the database,
@@ -27,6 +23,7 @@ public class DatabaseManager {
     private static final Logger log = Logger.getLogger(DatabaseManager.class.getName());
     // READ ME. before you change the DB URL, have you ensured local permissions and state?
     // remember. netbeans will happily mangle permissions without warning...
+    // do not ever set this value to an existing directory relative to the project root.
     private static final String DB_URL = "jdbc:derby:Chess_v3;create=true";
     private static final String USERS_TABLE = "USERS", GAMES_TABLE = "GAMES", MOVES_TABLE = "MOVES";
     private Connection connection;
@@ -47,15 +44,6 @@ public class DatabaseManager {
         consoleHandler.setLevel(Level.ALL);
         // Add the console handler to the logger
         log.addHandler(consoleHandler);
-    }
-
-    /**
-     * creates all tables if they don't exist already.
-     */
-    public void createTables() {
-        createUsersTable();
-        createGamesTable();
-        createMovesTable();
     }
 
     /**
@@ -265,7 +253,22 @@ public class DatabaseManager {
         }
         return false;
     }
-
+    public int getWins(String player) {
+        try {
+            PreparedStatement statement = connection.prepareStatement(
+                    "SELECT wins FROM " + USERS_TABLE + " WHERE username = ?"
+            );
+            statement.setString(1, player);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("wins");
+            }
+        } catch (SQLException ex) {
+            log.severe("getWins: Error getting wins for user: " + player
+                    + ". Error message: " + ex.getMessage());
+        }
+        return -1;
+    }
     /**
      * Adds a game entry to the database with a new game ID
      * with player1 as a given Users name string
@@ -283,31 +286,36 @@ public class DatabaseManager {
             // Make sure Player1 exists in the database
             if (!player1Result.next()) {
                 log.severe("newGame: " + "GIVEN INVALID PLAYER");
+                throw new IllegalArgumentException("Invalid player: " + player1);
             }
 
             int player1Id = player1Result.getInt("UserID");
 
             // Insert a new game record with Player1's ID
             PreparedStatement insert = connection.prepareStatement(
-                    "INSERT INTO " + GAMES_TABLE + " (Player1, Status, Result) VALUES (?, ?, ?)"
+                    "INSERT INTO " + GAMES_TABLE + " (Player1, Status, Result) VALUES (?, ?, ?)",
+                    Statement.RETURN_GENERATED_KEYS  // Tell it to return the generated keys
             );
             insert.setInt(1, player1Id);
             insert.setBoolean(2, false);
             insert.setBoolean(3, false);
             insert.executeUpdate();
-            // get the gameID of the new game
-            PreparedStatement getGameID = connection.prepareStatement(
-                    "SELECT GameID FROM " + GAMES_TABLE + " WHERE Player1 = ?"
-            );
-            getGameID.setInt(1, player1Id);
-            ResultSet gameIDResult = getGameID.executeQuery();
 
-            return gameIDResult.getInt("GameID");
+            // Get the generated game ID
+            ResultSet generatedKeys = insert.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                return generatedKeys.getInt(1);  // The first column in the ResultSet contains the generated ID
+            } else {
+                log.severe("newGame: Unable to get the game ID.");
+                throw new SQLException("Unable to retrieve the game ID.");
+            }
+
         } catch (SQLException ex) {
             log.severe("newGame: " + ex.getMessage());
             return 3; // or any other suitable error code
         }
     }
+
 
 
     /**
@@ -372,8 +380,12 @@ public class DatabaseManager {
             );
             for (Move move : moves) {
                 statement.setInt(1, gameID);
-                statement.setString(2, String.valueOf((move.getFrom().getCol()) + move.getFrom().getRow()));
-                statement.setString(3, String.valueOf((move.getTo().getCol()) + move.getTo().getRow()));
+                String from = move.getFrom().getRow() + Integer.toString(move.getFrom().getCol());
+                String to = move.getTo().getRow() + Integer.toString(move.getTo().getCol());
+                System.out.println("From: " + from + " To: " + to);
+                statement.setString(2, from);
+                statement.setString(3, to);
+
                 statement.executeUpdate();
             }
         } catch (SQLException ex) {
@@ -454,6 +466,4 @@ public class DatabaseManager {
         }
         return games;
     }
-
-
 }

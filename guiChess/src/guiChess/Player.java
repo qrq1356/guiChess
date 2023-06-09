@@ -32,4 +32,7 @@ public abstract class Player {
         return Objects.hash(name, isUp);
     }
 
+    public String getName() {
+        return name;
+    }
 }

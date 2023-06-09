@@ -31,7 +31,6 @@ public class ChessPanel extends JPanel implements GameObserver {
     private JLabel errorLabel;
     private JLabel turnLabel;
     private JList<String> moveList;
-    
 
     public ChessPanel(SessionManager sessionManager) {
         this.gameEngine = sessionManager.getGameEngine();
@@ -181,6 +180,15 @@ public class ChessPanel extends JPanel implements GameObserver {
     public void onGameStateChange(GameEngine gameEngine) {
         this.gameEngine = gameEngine;
         updateButtons(gameEngine);
+        // update turn label
+        turnLabel.setText("Turn: " + gameEngine.getCurrentPlayerName());
+        // update move list
+        DefaultListModel<String> listModel = new DefaultListModel<>();
+        for (Move move : gameEngine.getMoves()) {
+            listModel.addElement(move.toString());
+        }
+        moveList.setModel(listModel);
+
     }
 
     public void onPiecePress(Position pos) {
@@ -191,6 +199,7 @@ public class ChessPanel extends JPanel implements GameObserver {
             buttons[selectedPosition.getCol()][selectedPosition.getRow()].setBackground((selectedPosition.getCol() + selectedPosition.getRow()) % 2 == 0 ? BACKGROUND_COLOR : BACKGROUND_COLOR_2);
             gameEngine.play(new Move(new Position(selectedPosition.getCol(), selectedPosition.getRow()), new Position(pos.getCol(), pos.getRow())));
             selectedPosition = null;
+            sessionManager.CheckGameState();
         }
     }
 
